@@ -1,0 +1,27 @@
+ 
+todo:
+- dx sale bug deposit contract (fonction de transfert ?)
+- array whiteList & fonction transfer sans commission pour l'owner, dxSale,pancakeswap
+- repartition : attente  
+- ranking : cas même rank
+
+test dxale:
+- end date dans 1 jour
+- soft : 1
+- hard : 3
+- 1bnb = 1esc
+- bien vérifier qu'on a bcp d'escaliers
+
+déploiement remix:
+- multiplier la totalSupply par 10^6
+- préparer poolAddress & teamAddress
+
+
+dxSale:
+- coût déploiement (environ 50€/0.3BNB)
+- déposer les tokens sur l'adresse presale
+- pas possible de récupérer les bnb avant la fin même si softcap atteint
+- min contribution : moins de 1BNB
+- max contribution : max 50% hardcap 
+- augmenter softcap ? (30BNB considéré comme low)
+-liquidity holding min 3 mois after end
