@@ -28,7 +28,7 @@ contract STAIRToken is IERC20 {
     
     string public constant name = "ESCALIER";
     string public constant symbol = "ESC";
-    uint8 public constant decimals = 6;
+    uint8 public constant decimals = 0;
 
 
  
@@ -63,7 +63,7 @@ contract STAIRToken is IERC20 {
 
 
    constructor(uint256 total
-   //, address poolAddress_ , address teamAddress_, uint256 level_
+   , address poolAddress_ , address teamAddress_, uint256 level_
    ) public {
     totalSupply_ = total;
     balances[msg.sender] = totalSupply_;
@@ -140,9 +140,9 @@ contract STAIRToken is IERC20 {
         balances[to] = balances[to].add(amount);
         emit Transfer(from, to, amount);
         
-        //balanceTracker.updateUserBalance(from);
-        //balanceTracker.updateUserBalance(to);
-        
+        balanceTracker.updateUserBalance(from);
+        balanceTracker.updateUserBalance(to);
+     
         return true;
         
     }
@@ -182,6 +182,9 @@ contract STAIRToken is IERC20 {
     //toupdate
     function poolDispatch() private{
         address[] memory rankedHolders;
+         uint256 eligibleHolders = balanceTracker.treeAbove(minimumHolding);
+      
+        
         
         uint256 teamTokens = balances[ poolAddress ]*teamShare/100;
         uint256 holderTokens = balances[poolAddress] - teamTokens;
@@ -190,16 +193,16 @@ contract STAIRToken is IERC20 {
         balances[teamAddress] =  balances[teamAddress].add(teamTokens);
         balances[poolAddress] =  balances[ poolAddress ].sub( teamTokens );
         
-        if(rankedHolders.length == 0) return;
+        if(eligibleHolders == 0) return;
         
-        else if(rankedHolders.length == 1){
-            balances[rankedHolders[0]] = balances[rankedHolders[0]].add(holderTokens);
+        else if(eligibleHolders == 1){
+            balances[balanceTracker.getUserAtRank(1)] = balances[balanceTracker.getUserAtRank(1)].add(holderTokens);
             balances[poolAddress] = balances[poolAddress].sub(holderTokens);
         }
         
         else if(rankedHolders.length ==2){
-            balances[rankedHolders[0]] = balances[rankedHolders[0]].add(holderTokens/2);
-            balances[rankedHolders[1]] = balances[rankedHolders[1]].add(holderTokens/2);
+            balances[balanceTracker.getUserAtRank(1)] = balances[balanceTracker.getUserAtRank(1)].add(holderTokens/2);
+            balances[balanceTracker.getUserAtRank(2)] = balances[rankedHolders[1]].add(holderTokens/2);
             balances[poolAddress] = balances[poolAddress].sub(holderTokens);
         
         }
@@ -207,32 +210,32 @@ contract STAIRToken is IERC20 {
              uint256 pioneersTokens= holderTokens*2/100;
              holderTokens = holderTokens.sub(pioneersTokens);
              
-             uint256 top20Tokens = (holderTokens*50/100) / (rankedHolders.length*20/100);
-             uint256 top50Tokens = (holderTokens*30/100) /  ( rankedHolders.length*30/100);
-             uint256 top100Tokens = (holderTokens*18/100) /  (rankedHolders.length*50/100);
+             uint256 top20Tokens = (holderTokens.mul(50).div(100)).div(eligibleHolders.mul(20).div(100));
+             uint256 top50Tokens = (holderTokens.mul(30).div(100)).div(eligibleHolders.mul(30).div(100));
+             uint256 top100Tokens = (holderTokens.mul(18).div(100)).div(eligibleHolders.mul(50).div(100));
              
-            for (uint i=0; i<rankedHolders.length; i++) {
-                if(isPioneer(rankedHolders[i])){
-                    balances[rankedHolders[i]] = balances[rankedHolders[i]].add( pioneersTokens / pioneers.length );
+            for (uint i=1; i<=eligibleHolders; i.add(1)) {
+                if(isPioneer(balanceTracker.getUserAtRank(i))){
+                    balances[balanceTracker.getUserAtRank(i)] = balances[balanceTracker.getUserAtRank(i)].add( pioneersTokens / pioneers.length );
                     balances[poolAddress] =  balances[ poolAddress ].sub( pioneersTokens /  pioneers.length );
-                    emit Transfer(poolAddress, rankedHolders[i], pioneersTokens /  pioneers.length);
+                    emit Transfer(poolAddress, balanceTracker.getUserAtRank(i), pioneersTokens /  pioneers.length);
                 }
                 
-                if(i >= (20 * rankedHolders.length)/100 ){
-                    balances[rankedHolders[i]] = balances[rankedHolders[i]].add( top20Tokens );
+                if(i <= (20 * eligibleHolders)/100 ){
+                    balances[balanceTracker.getUserAtRank(i)] = balances[balanceTracker.getUserAtRank(i)].add( top20Tokens );
                     balances[poolAddress] =  balances[ poolAddress ].sub( top20Tokens );
-                    emit Transfer(poolAddress, rankedHolders[i], top20Tokens);
+                    emit Transfer(poolAddress, balanceTracker.getUserAtRank(i), top20Tokens);
                     
                 }
-                else if(i >= (50 * rankedHolders.length)/100 ){
-                    balances[rankedHolders[i]] = balances[rankedHolders[i]].add( top50Tokens );
+                else if(i <= (50 * eligibleHolders)/100 ){
+                    balances[balanceTracker.getUserAtRank(i)] = balances[balanceTracker.getUserAtRank(i)].add( top50Tokens );
                     balances[poolAddress] =  balances[ poolAddress ].sub( top50Tokens );
-                    emit Transfer(poolAddress, rankedHolders[i], top50Tokens);
+                    emit Transfer(poolAddress, balanceTracker.getUserAtRank(i), top50Tokens);
                 }
                 else{
-                    balances[rankedHolders[i]] = balances[rankedHolders[i]].add( top100Tokens );
+                    balances[balanceTracker.getUserAtRank(i)] = balances[balanceTracker.getUserAtRank(i)].add( top100Tokens );
                     balances[poolAddress] =  balances[ poolAddress ].sub( top100Tokens );
-                    emit Transfer(poolAddress, rankedHolders[i], top100Tokens);
+                    emit Transfer(poolAddress, balanceTracker.getUserAtRank(i), top100Tokens);
                 }
                 
                 // balances[rankedHolders[i]] = balances[rankedHolders[i]].add( level/(rankedHolders.length ) );
@@ -284,6 +287,8 @@ contract STAIRToken is IERC20 {
     function setPoolAddress(address addr) public onlyOwner{
         poolAddress = addr;
     }
+    
+
     
     function enableCommission(bool enable) public onlyOwner{
         commissionEnabled = enable;
