@@ -3,12 +3,31 @@ const stairToken_ = artifacts.require("StairToken");
 const balanceTracker_ = artifacts.require("BalanceTracker");
 
 
+
 contract('StairToken', (accounts) => {
+  const poolAddress = accounts[2]
+
   it('should put 10000 STAIR in the first account', async () => {
     const stairToken = await stairToken_.deployed();
-    //const balance = await metaCoinInstance.getBalance.call(accounts[0]);
+    const balanceTracker = await balanceTracker_.deployed()
 
-    assert.equal((await stairToken.totalSupply()).toNumber(), 10000000, "Error getTotalSupply");
+    await stairToken.setBalanceTracker(balanceTracker.address)
+
+    //assert.equal((await stairToken.totalSupply()).toNumber(), 1000000, "Error getTotalSupply");
+    //assert.equal((await balanceTracker.treeCount()).toNumber(), 0, "Error treeCount");
+
+    await stairToken.transfer(accounts[1], 100)
+
+    await stairToken.setPoolAddress(poolAddress)
+    await stairToken.transfer(poolAddress, 100)
+    //assert.equal((await balanceTracker.treeCount()).toNumber(), 2, "Error treeCount 2");
+
+    //assert.equal(await stairToken.balanceOf(accounts[1]), 100, "Error transfer1");
+
+    await stairToken.forceDispatch();
+
+    assert.equal((await stairToken.balanceOf(poolAddress)).toNumber(),0,"pool is not empty")
+
   });
 /*
   it('should call a function that depends on a linked library', async () => {
