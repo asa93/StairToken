@@ -18,6 +18,8 @@ contract('StairToken', (accounts) => {
 
     await stairToken.transfer(accounts[2], 100)
     await stairToken.transfer(accounts[3], 100)
+    await stairToken.transfer(accounts[4], 100)
+    await stairToken.transfer(accounts[5], 100)
 
     await stairToken.setPoolAddress(poolAddress)
     await stairToken.transfer(poolAddress, 100)
@@ -25,18 +27,24 @@ contract('StairToken', (accounts) => {
 
     //assert.equal(await stairToken.balanceOf(accounts[1]), 100, "Error transfer1");
 
-    assert.equal((await stairToken.getEligibleHolders()).toNumber(),3,"error eligibleHolders")
+    assert.equal((await stairToken.getEligibleHolders()).toNumber(),4,"error eligibleHolders")
+
+   
+    assert.equal((await stairToken.top20Tokens()).toNumber(),0,"error top20tokens")
+    assert.equal((await stairToken.top50Tokens()).toNumber(),10,"error top50tokens")
+    assert.equal((await stairToken.top100Tokens()).toNumber(),5,"error top100tokens")
 
     await stairToken.forceDispatch();
 
-    assert.equal((await stairToken.balanceOf(poolAddress)).toNumber(),0,"pool is not empty")
+    assert.equal((await stairToken.balanceOf(poolAddress)).toNumber(),40,"pool is not empty")
+    
 
     assert.equal((await balanceTracker.treeCount()).toNumber(), 3, "Error treeCount should be 3");
 
     
-    assert.equal((await stairToken.balanceOf(accounts[2])).toNumber(),120," accounts 2 balance didn't receive all funds")
-    assert.equal((await stairToken.balanceOf(accounts[3])).toNumber(),20," accounts 3 balance didn't receive all funds")
-    assert.equal((await stairToken.balanceOf(accounts[0])).toNumber(),10,"pool is not empty")
+    assert.equal((await stairToken.balanceOf(accounts[2])).toNumber(),110," accounts 2 balance didn't receive all funds")
+    assert.equal((await stairToken.balanceOf(accounts[3])).toNumber(),100," accounts 3 balance didn't receive all funds")
+    assert.equal((await stairToken.balanceOf(accounts[0])).toNumber(),stairToken.totalSupply()-300+10,"accounts 0 balance error")
 
   });
 /*
