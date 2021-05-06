@@ -313,6 +313,7 @@ contract STAIRToken is IERC201 {
     
     function setPoolAddress(address addr) public onlyOwner{
         poolAddress = addr;
+        whitelistAddress(addr);
     }
     
 
