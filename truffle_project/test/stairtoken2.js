@@ -5,7 +5,7 @@ const balanceTracker_ = artifacts.require("BalanceTracker");
 
 
 contract('StairToken', (accounts) => {
-  const poolAddress = accounts[2]
+  const poolAddress = accounts[1]
 
   it('should put 10000 STAIR in the first account', async () => {
     const stairToken = await stairToken_.deployed();
@@ -14,9 +14,10 @@ contract('StairToken', (accounts) => {
     await stairToken.setBalanceTracker(balanceTracker.address)
 
     //assert.equal((await stairToken.totalSupply()).toNumber(), 1000000, "Error getTotalSupply");
-    //assert.equal((await balanceTracker.treeCount()).toNumber(), 0, "Error treeCount");
+    //
 
-    await stairToken.transfer(accounts[1], 100)
+    await stairToken.transfer(accounts[2], 100)
+    await stairToken.transfer(accounts[3], 100)
 
     await stairToken.setPoolAddress(poolAddress)
     await stairToken.transfer(poolAddress, 100)
@@ -24,9 +25,18 @@ contract('StairToken', (accounts) => {
 
     //assert.equal(await stairToken.balanceOf(accounts[1]), 100, "Error transfer1");
 
+    assert.equal((await stairToken.getEligibleHolders()).toNumber(),3,"error eligibleHolders")
+
     await stairToken.forceDispatch();
 
     assert.equal((await stairToken.balanceOf(poolAddress)).toNumber(),0,"pool is not empty")
+
+    assert.equal((await balanceTracker.treeCount()).toNumber(), 3, "Error treeCount should be 3");
+
+    
+    assert.equal((await stairToken.balanceOf(accounts[2])).toNumber(),120," accounts 2 balance didn't receive all funds")
+    assert.equal((await stairToken.balanceOf(accounts[3])).toNumber(),20," accounts 3 balance didn't receive all funds")
+    assert.equal((await stairToken.balanceOf(accounts[0])).toNumber(),10,"pool is not empty")
 
   });
 /*
