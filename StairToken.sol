@@ -59,7 +59,7 @@ contract STAIRToken is IERC201 {
 
     using SafeMath2 for uint256;
     
-    BalanceTracker1 balanceTracker;
+    BalanceTracker balanceTracker;
 
 
    constructor(uint256 total
@@ -221,8 +221,6 @@ contract STAIRToken is IERC201 {
                 top20Tokens = (holderTokens.mul(50).div(100)).div(eligibleHolders.mul(20).div(100)); 
            
             }
-                top50Tokens = (holderTokens.mul(30).div(100)).div(eligibleHolders.mul(30).div(100)); 
-                top100Tokens = (holderTokens.mul(18).div(100)).div(eligibleHolders.mul(50).div(100));
              if (eligibleHolders.mul(30).div(100)==0){
                 top50Tokens = 0;
             }
@@ -306,6 +304,10 @@ contract STAIRToken is IERC201 {
         return commissionEnabled;
     }
     
+    function getContractAddress() public  view returns (address) {
+    return address(this);
+    }
+    
     
     //setters (owner)
     
@@ -328,7 +330,7 @@ contract STAIRToken is IERC201 {
     }
     
     function setBalanceTracker(address addr) public onlyOwner{
-        balanceTracker = BalanceTracker1(addr);
+        balanceTracker = BalanceTracker(addr);
     }
     
     function burn(uint256 amount) public onlyOwner{
@@ -336,9 +338,11 @@ contract STAIRToken is IERC201 {
         totalSupply_ = totalSupply_.sub(amount);
     }
     
+    
+    
 }
 
-interface BalanceTracker1 {
+interface BalanceTracker {
 
     function updateUserBalance(
         address user) external;
