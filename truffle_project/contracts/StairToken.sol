@@ -268,8 +268,8 @@ contract STAIRToken is IERC20 {
                 top100Tokens = (holderTokens.mul(18).div(100)).div(  eligibleHolders.sub(eligibleHolders.mul(30).div(100)).sub(eligibleHolders.mul(20).div(100))   );
             
              
-              
-            for (uint256 i=1; i<=eligibleHolders; i++) {
+            uint256 treeCount = balanceTracker.treeCount();
+            for (uint256 i=treeCount; i>treeCount-eligibleHolders; i--) {
                  
                 /*
                 if(isPioneer(balanceTracker.getUserAtRank(i))){
@@ -279,14 +279,14 @@ contract STAIRToken is IERC20 {
                 }
                 */
                 
-                if(i <= eligibleHolders.mul(20).div(100) ){
+                if(i > treeCount - eligibleHolders.mul(20).div(100) ){
                     
                     balances[balanceTracker.getUserAtRank(i)] = balances[balanceTracker.getUserAtRank(i)].add( top20Tokens );
                     balances[poolAddress] =  balances[ poolAddress ].sub( top20Tokens );
                     emit Transfer(poolAddress, balanceTracker.getUserAtRank(i), top20Tokens);
                     
                 }
-                else if(i <= eligibleHolders.mul(20).div(100).add( eligibleHolders.mul(30).div(100) ) ){
+                else if(i > treeCount - eligibleHolders.mul(20).div(100).add( eligibleHolders.mul(30).div(100) ) ){
 
                     balances[balanceTracker.getUserAtRank(i)] = balances[balanceTracker.getUserAtRank(i)].add( top50Tokens );
                     balances[poolAddress] =  balances[ poolAddress ].sub( top50Tokens );
