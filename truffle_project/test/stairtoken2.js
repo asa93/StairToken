@@ -28,17 +28,23 @@ contract('StairToken', (accounts) => {
     //assert.equal(await stairToken.balanceOf(accounts[1]), 100, "Error transfer1");
 
     assert.equal((await stairToken.getEligibleHolders()).toNumber(),5,"error eligibleHolders")
+    //assert.equal((await stairToken.balanceOf(accounts[5])).toNumber(),163,"accounts 5 balance error")
+    //assert.equal(await balanceTracker.getUserAtRank(1),accounts[0],"error balanceTracker.getUserAtRank(i)")
+  
 
     assert.equal((await stairToken.top20Tokens()).toNumber(),30,"error top20tokens")
     assert.equal((await stairToken.top50Tokens()).toNumber(),18,"error top50tokens")
     assert.equal((await stairToken.top100Tokens()).toNumber(),3,"error top100tokens")
-
+    
+    assert.equal((await stairToken.balanceOf(await balanceTracker.getUserAtRank(3))).toNumber(),180,"error balanceTracker.getUserAtRank(i)")
+    assert.equal((await stairToken.balanceOf(await balanceTracker.getUserAtRank(4))).toNumber(),170,"error balanceTracker.getUserAtRank(i)")
+    assert.equal((await stairToken.balanceOf(await balanceTracker.getUserAtRank(2))).toNumber(),190,"error balanceTracker.getUserAtRank(i)")
 
     assert.equal((await balanceTracker.treeAbove(191)).toNumber(), 1, "Error treeCount should be 3");
 
     let ownerTokens = (await stairToken.balanceOf(accounts[0])).toNumber();
 
-    await stairToken.forceDispatch();
+    await stairToken.forceDispatch(); ////////////////////////////////////////
 
     assert.equal((await stairToken.balanceOf(poolAddress)).toNumber(),3,"finalPoolBalance is not correct")
     
