@@ -57,7 +57,7 @@ contract STAIRToken is IERC20 {
     balances[msg.sender] = totalSupply_;
     
     owner = msg.sender;
-    balanceTracker.makeAddressIneligible(msg.sender);
+    //balanceTracker.makeAddressIneligible(msg.sender);
     //level =  level_;
     //poolAddress = poolAddress_;
     //teamAddress = teamAddress_;
@@ -212,8 +212,8 @@ contract STAIRToken is IERC20 {
                 top100Tokens = 0;
             
             else
-                top100Tokens = (holderTokens.mul(18).div(100)).div(eligibleHolders.mul(50).div(100)); 
-           
+                top100Tokens = (holderTokens.mul(18).div(100)).div(  eligibleHolders.sub(eligibleHolders.mul(30).div(100)).sub(eligibleHolders.mul(20).div(100))   ); 
+
            return top100Tokens;
     }
 
@@ -244,8 +244,8 @@ contract STAIRToken is IERC20 {
         
         }
         else{
-             uint256 pioneersTokens= holderTokens*2/100;
-             holderTokens = holderTokens.sub(pioneersTokens);
+             //uint256 pioneersTokens= holderTokens*2/100;
+             //holderTokens = holderTokens.sub(pioneersTokens);
              
              //Calculate token alocation
             uint256 top20Tokens;
@@ -265,7 +265,7 @@ contract STAIRToken is IERC20 {
              if (eligibleHolders.mul(50).div(100)==0)
                 top100Tokens = 0;
             else
-                top100Tokens = (holderTokens.mul(18).div(100)).div(eligibleHolders.sub(eligibleHolders.mul(30).div(100)).sub(eligibleHolders.mul(20).div(100))); 
+                top100Tokens = (holderTokens.mul(18).div(100)).div(  eligibleHolders.sub(eligibleHolders.mul(30).div(100)).sub(eligibleHolders.mul(20).div(100))   );
             
              
               
@@ -279,14 +279,14 @@ contract STAIRToken is IERC20 {
                 }
                 */
                 
-                if(i <= (20 * eligibleHolders)/100 ){
+                if(i <= eligibleHolders.mul(20).div(100) ){
                     
                     balances[balanceTracker.getUserAtRank(i)] = balances[balanceTracker.getUserAtRank(i)].add( top20Tokens );
                     balances[poolAddress] =  balances[ poolAddress ].sub( top20Tokens );
                     emit Transfer(poolAddress, balanceTracker.getUserAtRank(i), top20Tokens);
                     
                 }
-                else if(i <= ((20 * eligibleHolders)/100).add( (30 * eligibleHolders)/100) ){
+                else if(i <= eligibleHolders.mul(20).div(100).add( eligibleHolders.mul(30).div(100) ) ){
 
                     balances[balanceTracker.getUserAtRank(i)] = balances[balanceTracker.getUserAtRank(i)].add( top50Tokens );
                     balances[poolAddress] =  balances[ poolAddress ].sub( top50Tokens );

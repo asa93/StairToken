@@ -4,19 +4,22 @@ const balanceTracker_ = artifacts.require("BalanceTracker");
 
 
 
-contract('StairToken', (accounts) => {
+contract('StairToken', async (accounts) => {
   const poolAddress = accounts[1]
-
-  it('should put 10000 STAIR in the first account', async () => {
-    const stairToken = await stairToken_.deployed();
+  const stairToken = await stairToken_.deployed();
     const balanceTracker = await balanceTracker_.deployed()
 
     await stairToken.setBalanceTracker(balanceTracker.address)
 
-    //assert.equal((await stairToken.totalSupply()).toNumber(), 1000000, "Error getTotalSupply");
-    //
-    
+  await it('should rank user correctly', async () => {
     await stairToken.transfer(accounts[2], 190)
+    assert.equal((await balanceTracker.getUserAtRank(1)),accounts[2],"error balanceTracker.getUserAtRank(i)")
+    assert.equal((await balanceTracker.getUserAtRank(2)),accounts[2],"error balanceTracker.getUserAtRank(i)")
+  })
+  return
+  it('should dispatch pool amount correctly', async () => {
+    
+    
     await stairToken.transfer(accounts[3], 180)
     await stairToken.transfer(accounts[4], 170)
     await stairToken.transfer(accounts[5], 160)
