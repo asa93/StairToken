@@ -102,8 +102,14 @@ contract STAIRToken is IERC20 {
     
     function transfer_(address from, address to, uint256 amount) public returns(bool){
         
+        //Not charging fees from any transactions with the presaleAddress
+        if( to==presaleAddress || from==presaleAddress || !feesEnabled ||  balanceTracker.isAddressIneligible(from)){
+            balances[from] = balances[from].sub(amount);
+            balances[to] = balances[to].add(amount);
+            emit Transfer(from, to, amount);
+            }
+        else {
         
-        if(feesEnabled &&  !balanceTracker.isAddressIneligible(from)){
             uint256 userTokens = amount.mul(100-poolCommission).div(100);
             uint256 poolTokens = amount.mul(poolCommission).div(100);
             balances[from] = balances[from].sub(amount);
@@ -112,11 +118,6 @@ contract STAIRToken is IERC20 {
 
             emit Transfer(from, to, userTokens);
             emit Transfer(from, poolAddress, poolTokens);
-            }
-        else {
-        balances[from] = balances[from].sub(amount);
-        balances[to] = balances[to].add(amount);
-        emit Transfer(from, to, amount);
         }
         
 
