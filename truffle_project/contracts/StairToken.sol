@@ -252,7 +252,7 @@ contract STAIRToken is IERC20 {
             for (uint256 i=treeCount; i>treeCount-eligibleHolders; i--) {
                  address currentUser = balanceTracker.getUserAtRank(i);
                 
-                if(isPioneer(currentUser) && balances[currentUser] < minimumHoldingPioneer ){
+                if(isPioneer(currentUser) && balances[currentUser] > minimumHoldingPioneer ){
                     balances[currentUser] = balances[currentUser].add( pioneersTokens / pioneers.length );
                     balances[poolAddress] =  balances[ poolAddress ].sub( pioneersTokens /  pioneers.length );
                     emit Transfer(poolAddress, currentUser, pioneersTokens /  pioneers.length);
