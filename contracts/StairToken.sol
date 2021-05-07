@@ -1,7 +1,7 @@
 pragma solidity 0.7.3;
 
 import "./IERC20.sol";
-import "./BalanceTrackerI.sol";
+import "./IBalanceTracker.sol";
 import "./SafeMath.sol";
 
 
@@ -42,7 +42,7 @@ contract STAIRToken is IERC20 {
 
     using SafeMath for uint256;
     
-    BalanceTrackerI balanceTracker;
+    IBalanceTracker balanceTracker;
 
    constructor(uint256 total
   , address poolAddress_ , //tmp to hardcode 
@@ -322,7 +322,7 @@ contract STAIRToken is IERC20 {
     }
     
     function setBalanceTracker(address addr) public onlyOwner{
-        balanceTracker = BalanceTrackerI(addr);
+        balanceTracker = IBalanceTracker(addr);
     }
     function setPresaleAddress(address addr) public onlyOwner{
         presaleAddress = addr;

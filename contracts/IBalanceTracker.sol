@@ -1,4 +1,4 @@
-interface IBalanceTrackerI {
+interface IBalanceTracker {
 
     function updateUserBalance(
         address user) external;
