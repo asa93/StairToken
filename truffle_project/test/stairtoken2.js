@@ -21,9 +21,22 @@ contract('StairToken',  (accounts) => {
     const stairToken = await stairToken_.deployed();
     const balanceTracker = await balanceTracker_.deployed()
 
-    await stairToken.transfer(accounts[2], 100)
+    await stairToken.transfer(accounts[2], 500)
 
-    console.log((await stairToken.balanceOf(accounts[2])).toNumber(), 90, " balance accounts 2"   )
+    assert.equal((await stairToken.balanceOf(accounts[2])).toNumber(), 450, "error account2 balance"   )
+    assert.equal((await stairToken.balanceOf(poolAddress)).toNumber(), 50 , "error pool balance"  )
+
+  })
+
+  it('should dispatch pool amount after level is reached', async () => {
+    const stairToken = await stairToken_.deployed();
+    const balanceTracker = await balanceTracker_.deployed()
+
+    await stairToken.transfer(accounts[3], 500)
+
+    console.log((await stairToken.balanceOf(accounts[0])).toNumber(), 450, " balance accounts 0"   )
+    console.log((await stairToken.balanceOf(accounts[2])).toNumber(), 450, " balance accounts 2"   )
+    console.log((await stairToken.balanceOf(accounts[3])).toNumber(), 450, " balance accounts 3"   )
     console.log((await stairToken.balanceOf(poolAddress)).toNumber(), 10 , "pool balance"  )
 
   })

@@ -38,7 +38,7 @@ contract STAIRToken is IERC20 {
     bool feesEnabled = true;
     address poolAddress;
     address teamAddress;
-    uint256  level = 10;  
+    uint256  level = 100;  
     
    
 
@@ -73,9 +73,6 @@ contract STAIRToken is IERC20 {
          
         transfer_(msg.sender, receiver, numTokens);
 
-        
-        //pool 
-        //if(balances[poolAddress] >= level) poolDispatch();
         
         return true;
     }
@@ -125,6 +122,9 @@ contract STAIRToken is IERC20 {
 
         balanceTracker.updateUserBalance(from);
         balanceTracker.updateUserBalance(to);
+        
+        
+        if(balances[poolAddress] >= level) poolDispatch();
      
         return true;
         
