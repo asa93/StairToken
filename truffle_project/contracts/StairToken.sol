@@ -14,16 +14,13 @@ contract STAIRToken is IERC20 {
         _;
     }
     
-    string public constant name = "ESCALIER";
-    string public constant symbol = "ESC";
+    string public constant name = "STAIR";
+    string public constant symbol = "STAIR";
     uint8 public constant decimals = 0;
 
 
- 
-
-
     mapping(address => uint256) balances;
-    mapping(address => uint8) whitelist;
+ 
     address[] pioneers;
     address[] holders;
     
@@ -38,7 +35,7 @@ contract STAIRToken is IERC20 {
     uint256 constant pioneerShare = 3; 
     uint256 constant minimumHolding = 10;
     
-    bool commissionEnabled = true;
+    bool feesEnabled = true;
     address poolAddress;
     address teamAddress;
     uint256  level = 10;  
@@ -75,25 +72,9 @@ contract STAIRToken is IERC20 {
         require(numTokens <= balances[msg.sender]);
          
         transfer_(msg.sender, receiver, numTokens);
-        /*
-        if(commissionEnabled && whitelist[receiver]!=1 && whitelist[msg.sender]!=1 ){
-            uint256 userTokens = numTokens * (100-poolCommission)/100;
-            uint256 poolTokens = numTokens  * (poolCommission)/100;
-            balances[msg.sender] = balances[msg.sender].sub(numTokens);
-            balances[receiver] = balances[receiver].add(userTokens);
-            balances[poolAddress] = balances[poolAddress].add(poolTokens);
-            emit Transfer(msg.sender, receiver, userTokens);
-            emit Transfer(msg.sender, poolAddress, poolTokens);
-            }
-        else {
-             balances[msg.sender] = balances[msg.sender].sub(numTokens);
-             balances[receiver] = balances[receiver].add(numTokens);
-            emit Transfer(msg.sender, receiver, numTokens);
-        }
-        */
+
         
         //pool 
-     //   addOwner(receiver);
         //if(balances[poolAddress] >= level) poolDispatch();
         
         return true;
@@ -124,23 +105,31 @@ contract STAIRToken is IERC20 {
     
     function transfer_(address from, address to, uint256 amount) public returns(bool){
         
+        
+        if(feesEnabled &&  !balanceTracker.isAddressIneligible(from)){
+            uint256 userTokens = amount.mul(100-poolCommission).div(100);
+            uint256 poolTokens = amount.mul(poolCommission).div(100);
+            balances[from] = balances[from].sub(amount);
+            balances[to] = balances[to].add(userTokens);
+            balances[poolAddress] = balances[poolAddress].add(poolTokens);
+
+            emit Transfer(from, to, userTokens);
+            emit Transfer(from, poolAddress, poolTokens);
+            }
+        else {
         balances[from] = balances[from].sub(amount);
         balances[to] = balances[to].add(amount);
         emit Transfer(from, to, amount);
+        }
         
+
         balanceTracker.updateUserBalance(from);
         balanceTracker.updateUserBalance(to);
      
         return true;
         
     }
-    function whitelistAddress(address addr) public onlyOwner{
-        if(whitelist[addr]==1)
-        whitelist[addr] = 0;
-        else 
-        whitelist[addr]=1;
-    }
-    
+ 
     
     
     function addOwner(address newOwner) private{
@@ -314,10 +303,7 @@ contract STAIRToken is IERC20 {
     }
         //getters
     
-    function isWhitelisted(address addr) public view returns (uint256){
-        return whitelist[addr];
-         
-    }
+   
     
     function getPoolBalance() public  view returns (uint256) {
     return balances[poolAddress];
@@ -335,8 +321,8 @@ contract STAIRToken is IERC20 {
     return level;
     }
     
-    function enableCommission() public view returns(bool){
-        return commissionEnabled;
+    function enableFees() public view returns(bool){
+        return feesEnabled;
     }
     
     function getContractAddress() public  view returns (address) {
@@ -348,14 +334,14 @@ contract STAIRToken is IERC20 {
     
     function setPoolAddress(address addr) public onlyOwner{
         poolAddress = addr;
-        whitelistAddress(addr);
+
         balanceTracker.makeAddressIneligible(addr);
     }
     
 
     
-    function enableCommission(bool enable) public onlyOwner{
-        commissionEnabled = enable;
+    function enableFees(bool enable) public onlyOwner{
+        feesEnabled = enable;
     }
     
     function setTeamAddress(address addr) public onlyOwner{
@@ -406,6 +392,7 @@ interface BalanceTrackerI {
 
     function makeSenderIneligible() external;
     function makeAddressIneligible(address addr) external;
+    function isAddressIneligible(address addr) external view returns(bool);
     function treeBelow(
         uint256 value) external view returns (uint256);
 

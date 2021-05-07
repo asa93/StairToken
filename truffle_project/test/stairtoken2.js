@@ -5,22 +5,42 @@ const balanceTracker_ = artifacts.require("BalanceTracker");
 
 
 contract('StairToken',  (accounts) => {
-  const poolAddress = accounts[1]
+  const poolAddress = accounts[1];
+  const poolCommission = 10;
+
+  it('should do this before all', async () => {
+    const stairToken = await stairToken_.deployed();
+    const balanceTracker = await balanceTracker_.deployed()
+    await stairToken.setBalanceTracker(balanceTracker.address)
+    await stairToken.setPoolAddress(poolAddress)
 
 
- 
+
+  })
+  it('should extract fees  correctly', async () => {
+    const stairToken = await stairToken_.deployed();
+    const balanceTracker = await balanceTracker_.deployed()
+
+    await stairToken.transfer(accounts[2], 100)
+
+    console.log((await stairToken.balanceOf(accounts[2])).toNumber(), 90, " balance accounts 2"   )
+    console.log((await stairToken.balanceOf(poolAddress)).toNumber(), 10 , "pool balance"  )
+
+  })
+  
+  return
   it('should dispatch pool amount correctly', async () => {
     
     const stairToken = await stairToken_.deployed();
     const balanceTracker = await balanceTracker_.deployed()
-    await stairToken.setBalanceTracker(balanceTracker.address)
-      
+
+
     await stairToken.transfer(accounts[2], 190)
     await stairToken.transfer(accounts[3], 180)
     await stairToken.transfer(accounts[4], 170)
     await stairToken.transfer(accounts[5], 160)
 
-    await stairToken.setPoolAddress(poolAddress)
+    
     await stairToken.transfer(poolAddress, 100)
     //assert.equal((await balanceTracker.treeCount()).toNumber(), 2, "Error treeCount 2");
 

@@ -937,6 +937,9 @@ function makeAddressIneligible(address addr) external {
         //Remove from tree if needed
         updateTree(addr, 0);
     }
+function isAddressIneligible(address addr) external view returns(bool){
+    return ineligibleWallets[addr];
+}
 
     //How much the user's balance has increased since the last
     //time it was updated. Return 0 if it has not increased.
