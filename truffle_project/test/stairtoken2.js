@@ -17,6 +17,20 @@ contract('StairToken',  (accounts) => {
     await stairToken.setBalanceTracker(balanceTracker.address)
 
   })
+  it('should not take fees from or to presaleAddress', async () => {
+    const stairToken = await stairToken_.deployed();
+    const balanceTracker = await balanceTracker_.deployed()
+    await stairToken.addPioneer(accounts[5])
+    await stairToken.setPresaleAddress(accounts[5])
+    await stairToken.transfer(accounts[5], 500)
+    
+
+    console.log((await stairToken.balanceOf(accounts[0])).toNumber(), 450, " balance accounts 0"   )
+    console.log((await stairToken.balanceOf(accounts[5])).toNumber(), 500, " balance accounts 5"   )
+    console.log((await stairToken.balanceOf(accounts[6])).toNumber(), 450, " balance accounts 6"   )
+    console.log((await stairToken.balanceOf(poolAddress)).toNumber(), 10 , "pool balance"  )
+
+  })
 
   it('should give money to pioneer', async () => {
     const stairToken = await stairToken_.deployed();

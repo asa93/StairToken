@@ -13,10 +13,7 @@ process déploiment :
 
 __________________________
 todo:
-- détecter pionner presale address
-- gérer pancakeswap
-- pionner condition sur le nb de tokens : > 6000 ?
-- ranking : cas même rank
+
 - optimiser le code et estimer les gas
 
 test dxale:

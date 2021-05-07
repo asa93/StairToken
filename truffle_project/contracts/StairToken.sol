@@ -300,14 +300,7 @@ contract STAIRToken is IERC20 {
         //getters
     
    
-    //tmp
-    function getPoolBalance() public  view returns (uint256) {
-    return balances[poolAddress];
-    }
-    //tmp
-    function getPoolAddress() public  view returns (address) {
-    return poolAddress;
-    }
+ 
     
     function getLevel() public  view returns (uint256) {
     return level;

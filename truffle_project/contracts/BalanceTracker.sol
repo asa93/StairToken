@@ -928,52 +928,9 @@ function isAddressIneligible(address addr) external view returns(bool){
     return ineligibleWallets[addr];
 }
 
-    //How much the user's balance has increased since the last
-    //time it was updated. Return 0 if it has not increased.
-    function balanceIncrease(address user) public view returns (uint256) {
-        uint256 current = addressToValue[user];
-        uint256 previous = addressToValuePrevious[user];
-
-        if(current <= previous) {
-            return 0;
-        }
-
-        return current.sub(previous);
-    }
-
-    //How much the user's balance has decreased since the last
-    //time it was updated. Return 0 if it has not decreased.
-    function balanceDecrease(address user) public view returns (uint256) {
-        uint256 current = addressToValue[user];
-        uint256 previous = addressToValuePrevious[user];
-
-        if(previous <= current) {
-            return 0;
-        }
-
-        return previous.sub(current);
-    }
-
-    function treeFirst() public view returns (uint256) {
-        return first(tree);
-    }
-
-    function treeLast() public view returns (uint256) {
-        return last(tree);
-    }
-
-    function treeNext(uint256 value) public view returns (uint256) {
-        return next(tree, value);
-    }
-
-    function treePrev(uint256 value) public view returns (uint256) {
-        return prev(tree, value);
-    }
 
 
-    function treeBelow(uint256 value) public view returns (uint256) {
-        return below(tree, value);
-    }
+   
 
     function treeAbove(uint256 value) public view returns (uint256) {
         return above(tree, value);
@@ -1054,16 +1011,6 @@ function isAddressIneligible(address addr) external view returns(bool){
     //based on a user's current balance
     function updateUserBalance(address user) external {
         handleAddressBalanceUpdated(user, stairToken.balanceOf(user));
-    }
-
-    //Allows anyone to call this to update the tree
-    //based on an array of users' current balances.
-    //For example, it is used after to deployment to add all current token
-    //holders to the data structures.
-    function updateUserBalances(address[] calldata users) external {
-        for(uint256 i = 0; i < users.length; i++) {
-            handleAddressBalanceUpdated(users[i], stairToken.balanceOf(users[i]));
-        }
     }
 
     //Updates the tree if the user is eligilble
