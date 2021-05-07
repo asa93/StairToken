@@ -905,10 +905,8 @@ contract BalanceTracker is Ownable, HitchensOrderStatisticsTree, RandomNumber {
        //ineligibleWallets[presaleAddress] = true;
 
         ineligibleWallets[tokenAddress] = true;
-        //ineligibleWallets[address(taxCollector)] = true;
         ineligibleWallets[address(this)] = true;
 
-        ineligibleWallets[0x0000000000000000000000000000000000000000] = true; //burn address
     }
 
     //Makes the msg.sender an ineligible wallet

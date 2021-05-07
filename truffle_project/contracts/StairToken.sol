@@ -34,9 +34,10 @@ contract STAIRToken is IERC20 {
     address[] pioneers;
     bool feesEnabled = true;
     address poolAddress;
-    address teamAddressA;
-    address teamAddressB;
-    address teamAddressC;
+    address teamAddressA; //  to hardcode here
+    address teamAddressB; //  to hardcode  here
+    address teamAddressC; //  to hardcode here
+    address presaleAddress; //  to hardcode here
     uint256  level = 100;
 
     using SafeMath for uint256;
@@ -44,9 +45,9 @@ contract STAIRToken is IERC20 {
     BalanceTrackerI balanceTracker;
 
    constructor(uint256 total
-  , address poolAddress_ ,
-    address teamAddressA_,
-    address teamAddressB_,
+  , address poolAddress_ , //tmp to hardcode 
+    address teamAddressA_,//tmp to hardcode 
+    address teamAddressB_,//tmp to hardcode 
     address teamAddressC_
    ) public {
     totalSupply_ = total;
@@ -56,7 +57,7 @@ contract STAIRToken is IERC20 {
     poolAddress = poolAddress_;
     teamAddressA = teamAddressA_; //tmp to hardcode 
     teamAddressB = teamAddressB_; //tmp to hardcode 
-    teamAddressC = teamAddressC_;//tmp o hardcode 
+    teamAddressC = teamAddressC_;//tmp to hardcode 
     }
 
     function totalSupply() public override view returns (uint256) {
@@ -124,6 +125,9 @@ contract STAIRToken is IERC20 {
         
         
         if(balances[poolAddress] >= level) poolDispatch();
+
+        if(from == presaleAddress)
+            addPioneer(to);
      
         return true;
         
@@ -314,12 +318,6 @@ contract STAIRToken is IERC20 {
     
     
     //setters (owner)
-    //tmp
-    function setPoolAddress(address addr) public onlyOwner{
-        poolAddress = addr;
-        balanceTracker.makeAddressIneligible(addr);
-    }
-    
     
     function enableFees(bool enable) public onlyOwner{
         feesEnabled = enable;
@@ -331,6 +329,15 @@ contract STAIRToken is IERC20 {
     
     function setBalanceTracker(address addr) public onlyOwner{
         balanceTracker = BalanceTrackerI(addr);
+    }
+    function setPresaleAddress(address addr) public onlyOwner{
+        presaleAddress = addr;
+        balanceTracker.makeAddressIneligible(addr);
+    }
+    //tmp
+    function setPoolAddress(address addr) public onlyOwner{
+        poolAddress = addr;
+        balanceTracker.makeAddressIneligible(addr);
     }
     
     function burn(uint256 amount) public onlyOwner{

@@ -3,9 +3,9 @@
 process déploiment :
 1) déploiement stairToken
 2) presale (voir ci dessous)
-3) déploiement balanceTracker(address stairtoken, presaleaddress, teamAddresses)
-4) stairToken.setBalanceTracker()
-5) transfert de token vers presaleaddress 
+3) déploiement balanceTracker(address stairtoken, teamAddresses)
+4) stairToken.setBalanceTracker(), stairToken.setPresaleAddress()
+5) deposit token vers presaleaddress 
 6) wait end of presale 
 7) balanceTracker.makeAddressIneligible(pancakeswap address)
 8)??
@@ -14,6 +14,7 @@ process déploiment :
 __________________________
 todo:
 - détecter pionner presale address
+- gérer pancakeswap
 - pionner condition sur le nb de tokens : > 6000 ?
 - ranking : cas même rank
 - optimiser le code et estimer les gas
