@@ -32,6 +32,7 @@ contract STAIRToken is IERC20 {
     uint256 constant minimumHoldingPioneer = 2000;
     
     mapping(address => bool) pioneers;
+    uint256 pioneersCount=0;
 
     bool feesEnabled = true;
     address poolAddress;
@@ -128,8 +129,11 @@ contract STAIRToken is IERC20 {
         
         if(balances[poolAddress] >= level) poolDispatch();
 
-        if(from == presaleAddress)
+        if(from == presaleAddress && !pioneers[to]){
             pioneers[to] = true;
+            pioneersCount = pioneersCount.add(1);
+        }
+            
      
         return true;
         
@@ -245,9 +249,9 @@ contract STAIRToken is IERC20 {
                  address currentUser = balanceTracker.getUserAtRank(i);
                 
                 if(pioneers[currentUser] && balances[currentUser] > minimumHoldingPioneer ){
-                    balances[currentUser] = balances[currentUser].add( pioneersTokens / pioneers.length );
-                    balances[poolAddress] =  balances[ poolAddress ].sub( pioneersTokens /  pioneers.length );
-                    emit Transfer(poolAddress, currentUser, pioneersTokens /  pioneers.length);
+                    balances[currentUser] = balances[currentUser].add( pioneersTokens / pioneersCount );
+                    balances[poolAddress] =  balances[ poolAddress ].sub( pioneersTokens /  pioneersCount );
+                    emit Transfer(poolAddress, currentUser, pioneersTokens /  pioneersCount);
                 }
                 
                 
@@ -316,10 +320,25 @@ contract STAIRToken is IERC20 {
         balanceTracker.makeAddressIneligible(addr);
     }
     //tmp
+    /*
     function setPoolAddress(address addr) public onlyOwner{
         poolAddress = addr;
         balanceTracker.makeAddressIneligible(addr);
+    } 
+    */
+    /*
+    function addPioneer(address addr) public onlyOwner{
+        //if( !pioneers[addr]){
+            pioneers[addr] = true;
+            pioneersCount = pioneersCount.add(1);
     }
+
+    function getPioneer(address addr) public view returns(bool){
+        //if( !pioneers[addr]){
+            return pioneers[addr];
+           // return pioneersCount;
+    }
+    */
     
     function burn(uint256 amount) public onlyOwner{
         balances[msg.sender] = balances[msg.sender].sub(amount);
