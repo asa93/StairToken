@@ -1,0 +1,42 @@
+
+
+process déploiment :
+1) déploiement stairToken
+2) presale (voir ci dessous)
+3) déploiement balanceTracker(address stairtoken, teamAddresses)
+4) stairToken.setBalanceTracker(), stairToken.setPresaleAddress()
+5) deposit token vers presaleaddress 
+6) wait end of presale 
+7) balanceTracker.makeAddressIneligible(pancakeswap address)
+8)??
+
+
+__________________________
+todo:
+
+- optimiser le code et estimer les gas
+
+test dxale:
+- end date dans 1 jour
+- soft : 1
+- hard : 3
+- 1bnb = 1esc
+- bien vérifier qu'on a bcp d'escaliers
+
+déploiement remix:
+- multiplier la totalSupply par 10^6
+- préparer poolAddress & teamAddress
+
+
+dxSale:
+- coût déploiement (environ 50€/0.3BNB)
+- déposer les tokens sur l'adresse presale
+- pas possible de récupérer les bnb avant la fin même si softcap atteint
+- min contribution : moins de 1BNB
+- max contribution : max 50% hardcap 
+- augmenter softcap ? (30BNB considéré comme low)
+-liquidity holding min 3 mois after end
+
+gasEstimate :
+- deploy : 50$
+- poolDispatch : 1$
