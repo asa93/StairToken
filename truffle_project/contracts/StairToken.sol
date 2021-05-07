@@ -1,6 +1,7 @@
 pragma solidity 0.7.3;
 
 import "./IERC20.sol";
+import "./BalanceTrackerI.sol";
 import "./SafeMath.sol";
 
 
@@ -17,17 +18,11 @@ contract STAIRToken is IERC20 {
     string public constant name = "STAIR";
     string public constant symbol = "STAIR";
     uint8 public constant decimals = 0;
-
+    uint256 totalSupply_;
 
     mapping(address => uint256) balances;
- 
-    address[] pioneers;
-    address[] holders;
-    
     mapping(address => mapping (address => uint256)) allowed;
 
-    uint256 totalSupply_;
-    
     
     uint256 constant poolCommission = 10;
     uint256 constant teamShare = 40;
@@ -35,29 +30,32 @@ contract STAIRToken is IERC20 {
     uint256 constant pioneerShare = 3; 
     uint256 constant minimumHolding = 10;
     
+    address[] pioneers;
     bool feesEnabled = true;
     address poolAddress;
-    address teamAddress;
-    uint256  level = 100;  
-    
-   
+    address teamAddressA;
+    address teamAddressB;
+    address teamAddressC;
+    uint256  level = 100;
 
     using SafeMath for uint256;
     
     BalanceTrackerI balanceTracker;
 
-
    constructor(uint256 total
-  // , address poolAddress_ , address teamAddress_, uint256 level_
+  , address poolAddress_ ,
+    address teamAddressA_,
+    address teamAddressB_,
+    address teamAddressC_
    ) public {
     totalSupply_ = total;
     balances[msg.sender] = totalSupply_;
-    
     owner = msg.sender;
-    //balanceTracker.makeAddressIneligible(msg.sender);
-    //level =  level_;
-    //poolAddress = poolAddress_;
-    //teamAddress = teamAddress_;
+
+    poolAddress = poolAddress_;
+    teamAddressA = teamAddressA_; //tmp to hardcode 
+    teamAddressB = teamAddressB_; //tmp to hardcode 
+    teamAddressC = teamAddressC_;//tmp o hardcode 
     }
 
     function totalSupply() public override view returns (uint256) {
@@ -131,14 +129,6 @@ contract STAIRToken is IERC20 {
     }
  
     
-    
-    function addOwner(address newOwner) private{
-        for (uint i=0; i<holders.length; i++) {
-            if(holders[i] == newOwner) return;
-        }
-        holders.push(newOwner);
-    }
-    
     function addPioneer(address newPioneer) private{
         for (uint i=0; i<pioneers.length; i++) {
             if(pioneers[i] == newPioneer) return;
@@ -206,9 +196,7 @@ contract STAIRToken is IERC20 {
            return top100Tokens;
     }
 
- 
-    
-    //toupdate
+
     function poolDispatch() private{
        
         uint256 eligibleHolders = balanceTracker.treeAbove(minimumHolding);
@@ -216,7 +204,9 @@ contract STAIRToken is IERC20 {
         uint256 holderTokens = balances[poolAddress] - teamTokens;
         
         
-        balances[teamAddress] =  balances[teamAddress].add(teamTokens);
+        balances[teamAddressA] =  balances[teamAddressA].add(teamTokens.mul(45).div(100));
+        balances[teamAddressB] =  balances[teamAddressB].add(teamTokens.mul(35).div(100));
+        balances[teamAddressC] =  balances[teamAddressC].add(teamTokens.mul(20).div(100));
         balances[poolAddress] =  balances[ poolAddress ].sub( teamTokens );
         
         if(eligibleHolders == 0) return;
@@ -304,17 +294,13 @@ contract STAIRToken is IERC20 {
         //getters
     
    
-    
+    //tmp
     function getPoolBalance() public  view returns (uint256) {
     return balances[poolAddress];
     }
-    
+    //tmp
     function getPoolAddress() public  view returns (address) {
     return poolAddress;
-    }
-    
-    function getTeamAddress() public  view returns (address) {
-    return teamAddress;
     }
     
     function getLevel() public  view returns (uint256) {
@@ -325,27 +311,17 @@ contract STAIRToken is IERC20 {
         return feesEnabled;
     }
     
-    function getContractAddress() public  view returns (address) {
-    return address(this);
-    }
-    
     
     //setters (owner)
-    
+    //tmp
     function setPoolAddress(address addr) public onlyOwner{
         poolAddress = addr;
-
         balanceTracker.makeAddressIneligible(addr);
     }
     
-
     
     function enableFees(bool enable) public onlyOwner{
         feesEnabled = enable;
-    }
-    
-    function setTeamAddress(address addr) public onlyOwner{
-        teamAddress = addr;
     }
     
     function setLevel(uint256 level_) public onlyOwner{
@@ -365,44 +341,6 @@ contract STAIRToken is IERC20 {
     
 }
 
-interface BalanceTrackerI {
-
-    function updateUserBalance(
-        address user) external;
-
-    function getUserAtRank(
-        uint256 rank) external view returns (address);
-
-    function getRankForUser(
-        address user) external view returns (uint256);
-
-    function getRandomUserMinimumTokenBalance(
-        uint256 blockNumber,
-        uint256 minimumTokenBalance) external view returns (address);
-
-    function getRandomUserTopPercent(
-        uint256 blockNumber,
-        uint256 percent,
-        uint256 minimumTokenBalance) external view returns (address);
-
-    function getRandomUserTop(
-        uint256 blockNumber,
-        uint256 top) external view returns (address);
-
-
-    function makeSenderIneligible() external;
-    function makeAddressIneligible(address addr) external;
-    function isAddressIneligible(address addr) external view returns(bool);
-    function treeBelow(
-        uint256 value) external view returns (uint256);
-
-    function treeAbove(
-        uint256 value) external view returns (uint256);
-
-    function treeCount() external view returns (uint256);
- 
-    function treeValueAtRank(uint256 rank) external view returns (uint256); 
-}
 
 
  

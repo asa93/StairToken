@@ -895,27 +895,16 @@ contract BalanceTracker is Ownable, HitchensOrderStatisticsTree, RandomNumber {
     */
     uint256 constant BLOCKS_USED_FOR_ENTROPY = 8;
 
-    constructor(address tokenAddress) {
+    constructor(address tokenAddress, address teamAddressA, address teamAddressB, address teamAddressC) {
         
         stairToken = ERC20(tokenAddress);
         
-        ineligibleWallets[0x3829e24c798F28FBfC4597bd8E0f596a88af8Eec] = true; //teamAllocationWalletA
-        ineligibleWallets[0x4Bf9d4968186357fC366dD7E0C9d800F9f0EB482] = true; //teamAllocationWalletB
-        ineligibleWallets[0x45d7Be66f5D5AD9DeaB69c5D87c2E4B28908422d] = true; //teamAllocationWalletC
-        ineligibleWallets[0xCA5CBe09134F59cF41b7497f9AF4D3CeA91592F3] = true; //teamAllocationWalletD
-        ineligibleWallets[0xC0A4fcD05a2398AA586eddD20AB121e85A6cD452] = true; //teamMasterWallet
+        ineligibleWallets[teamAddressA] = true;  
+        ineligibleWallets[teamAddressB] = true;  
+        ineligibleWallets[teamAddressC] = true;  
+       //ineligibleWallets[presaleAddress] = true;
 
-        ineligibleWallets[0xC3278C1418cD412AD24d2E4aDAf5C082467A8F93] = true; //teamOperationsWallet
-
-        ineligibleWallets[0xca875a47f286dB3d7B2F171a785CCf92D732fF4f] = true; //teamFeesWalletA
-        ineligibleWallets[0x77CDa82b541535bAe683ca010B7b2a967500471a] = true; //teamFeesWalletB
-        ineligibleWallets[0xfB2Ae12E01e9ADb81F8c74Dd300b1dCA7e64850D] = true; //teamFeesWalletC
-        ineligibleWallets[0xfE25614088425456431bA96e568dC0275078D189] = true; //teamFeesWalletD
-        ineligibleWallets[0xCcd8EFE09Dc5Aa8e844836EbC22E017861961f8f] = true; //teamOperationsFeesWallet
-
-        ineligibleWallets[0x64D49C0B34Ff54b8fA857A78A3572Cec0cA4b7d4] = true; //presaleDeployerWallet
-
-        ineligibleWallets[address(stairToken)] = true;
+        ineligibleWallets[tokenAddress] = true;
         //ineligibleWallets[address(taxCollector)] = true;
         ineligibleWallets[address(this)] = true;
 
