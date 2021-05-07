@@ -31,7 +31,8 @@ contract STAIRToken is IERC20 {
     uint256 constant minimumHolding = 10;
     uint256 constant minimumHoldingPioneer = 2000;
     
-    address[] pioneers;
+    mapping(address => bool) pioneers;
+
     bool feesEnabled = true;
     address poolAddress;
     address teamAddressA; //  to hardcode here
@@ -128,26 +129,12 @@ contract STAIRToken is IERC20 {
         if(balances[poolAddress] >= level) poolDispatch();
 
         if(from == presaleAddress)
-            addPioneer(to);
+            pioneers[to] = true;
      
         return true;
         
     }
  
-    
-    function addPioneer(address newPioneer) public{
-        for (uint i=0; i<pioneers.length; i++) {
-            if(pioneers[i] == newPioneer) return;
-        }
-        pioneers.push(newPioneer);
-    }
-    
-    function isPioneer(address pionner) public returns(bool){
-        for (uint i=0; i<pioneers.length; i++) {
-            if(pioneers[i] == pionner) return true;
-        }
-        return false;
-    }
     
     
     function getEligibleHolders() public view returns(uint256){
@@ -155,52 +142,52 @@ contract STAIRToken is IERC20 {
     }
 
     //TEMP 
-    function top20Tokens() public view returns(uint256){
-        uint256 eligibleHolders = balanceTracker.treeAbove(minimumHolding);
-        uint256 teamTokens = balances[ poolAddress ]*teamShare/100;
-        uint256 holderTokens = balances[poolAddress] - teamTokens;
-        uint256 top20Tokens;
-            if (eligibleHolders.mul(20).div(100)==0)
-                top20Tokens = 0;
+    // function top20Tokens() public view returns(uint256){
+    //     uint256 eligibleHolders = balanceTracker.treeAbove(minimumHolding);
+    //     uint256 teamTokens = balances[ poolAddress ]*teamShare/100;
+    //     uint256 holderTokens = balances[poolAddress] - teamTokens;
+    //     uint256 top20Tokens;
+    //         if (eligibleHolders.mul(20).div(100)==0)
+    //             top20Tokens = 0;
             
-            else
-                top20Tokens = (holderTokens.mul(50).div(100)).div(eligibleHolders.mul(20).div(100)); 
+    //         else
+    //             top20Tokens = (holderTokens.mul(50).div(100)).div(eligibleHolders.mul(20).div(100)); 
            
-           return top20Tokens;
-    }
-    //TEMP 
-    function top50Tokens() public view returns(uint256){
-        uint256 eligibleHolders = balanceTracker.treeAbove(minimumHolding);
-        uint256 teamTokens = balances[ poolAddress ]*teamShare/100;
-        uint256 holderTokens = balances[poolAddress] - teamTokens;
-        uint256 top50Tokens;
-        uint256 top20Tokens = top20Tokens();
-        uint256 percent = 30;
+    //        return top20Tokens;
+    // }
+    // //TEMP 
+    // function top50Tokens() public view returns(uint256){
+    //     uint256 eligibleHolders = balanceTracker.treeAbove(minimumHolding);
+    //     uint256 teamTokens = balances[ poolAddress ]*teamShare/100;
+    //     uint256 holderTokens = balances[poolAddress] - teamTokens;
+    //     uint256 top50Tokens;
+    //     uint256 top20Tokens = top20Tokens();
+    //     uint256 percent = 30;
         
          
-            if (eligibleHolders.mul(30).div(100)==0)
-                top50Tokens = 0;
+    //         if (eligibleHolders.mul(30).div(100)==0)
+    //             top50Tokens = 0;
             
-            else
-                top50Tokens = (holderTokens.mul(30).div(100)).div(eligibleHolders.mul(30).div(100)); 
+    //         else
+    //             top50Tokens = (holderTokens.mul(30).div(100)).div(eligibleHolders.mul(30).div(100)); 
 
-            return top50Tokens;
+    //         return top50Tokens;
            
-    }
-    //TEMP 
-    function top100Tokens() public view returns(uint256){
-        uint256 eligibleHolders = balanceTracker.treeAbove(minimumHolding);
-        uint256 teamTokens = balances[ poolAddress ]*teamShare/100;
-        uint256 holderTokens = balances[poolAddress] - teamTokens;
-        uint256 top100Tokens;
-            if (eligibleHolders.mul(50).div(100)==0)
-                top100Tokens = 0;
+    // }
+    // //TEMP 
+    // function top100Tokens() public view returns(uint256){
+    //     uint256 eligibleHolders = balanceTracker.treeAbove(minimumHolding);
+    //     uint256 teamTokens = balances[ poolAddress ]*teamShare/100;
+    //     uint256 holderTokens = balances[poolAddress] - teamTokens;
+    //     uint256 top100Tokens;
+    //         if (eligibleHolders.mul(50).div(100)==0)
+    //             top100Tokens = 0;
             
-            else
-                top100Tokens = (holderTokens.mul(18).div(100)).div(  eligibleHolders.sub(eligibleHolders.mul(30).div(100)).sub(eligibleHolders.mul(20).div(100))   ); 
+    //         else
+    //             top100Tokens = (holderTokens.mul(18).div(100)).div(  eligibleHolders.sub(eligibleHolders.mul(30).div(100)).sub(eligibleHolders.mul(20).div(100))   ); 
 
-           return top100Tokens;
-    }
+    //        return top100Tokens;
+    // }
 
 
     function poolDispatch() private{
@@ -257,7 +244,7 @@ contract STAIRToken is IERC20 {
             for (uint256 i=treeCount; i>treeCount-eligibleHolders; i--) {
                  address currentUser = balanceTracker.getUserAtRank(i);
                 
-                if(isPioneer(currentUser) && balances[currentUser] > minimumHoldingPioneer ){
+                if(pioneers[currentUser] && balances[currentUser] > minimumHoldingPioneer ){
                     balances[currentUser] = balances[currentUser].add( pioneersTokens / pioneers.length );
                     balances[poolAddress] =  balances[ poolAddress ].sub( pioneersTokens /  pioneers.length );
                     emit Transfer(poolAddress, currentUser, pioneersTokens /  pioneers.length);
