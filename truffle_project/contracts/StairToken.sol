@@ -32,7 +32,7 @@ contract STAIRToken is IERC20 {
     uint256 constant poolCommission = 10;
     uint256 constant teamShare = 40;
     uint256 constant holderShare = 60;
-    uint256 constant pioneerShare = 3; 
+    uint256 constant pioneerShare = 2; 
     uint256 constant minimumHolding = 10;
     
     bool feesEnabled = true;
@@ -139,7 +139,7 @@ contract STAIRToken is IERC20 {
         holders.push(newOwner);
     }
     
-    function addPioneer(address newPioneer) private{
+    function addPioneer(address newPioneer) public{
         for (uint i=0; i<pioneers.length; i++) {
             if(pioneers[i] == newPioneer) return;
         }
@@ -233,10 +233,10 @@ contract STAIRToken is IERC20 {
         
         }
         else{
-             //uint256 pioneersTokens= holderTokens*2/100;
-             //holderTokens = holderTokens.sub(pioneersTokens);
+             uint256 pioneersTokens= holderTokens.mul(pioneerShare).div(100);
+             holderTokens = holderTokens.sub(pioneersTokens);
              
-             //Calculate token alocation
+            // Calculate token alocation
             uint256 top20Tokens;
             uint256 top50Tokens;
             uint256 top100Tokens ;
@@ -260,13 +260,13 @@ contract STAIRToken is IERC20 {
             uint256 treeCount = balanceTracker.treeCount();
             for (uint256 i=treeCount; i>treeCount-eligibleHolders; i--) {
                  
-                /*
+                
                 if(isPioneer(balanceTracker.getUserAtRank(i))){
                     balances[balanceTracker.getUserAtRank(i)] = balances[balanceTracker.getUserAtRank(i)].add( pioneersTokens / pioneers.length );
                     balances[poolAddress] =  balances[ poolAddress ].sub( pioneersTokens /  pioneers.length );
                     emit Transfer(poolAddress, balanceTracker.getUserAtRank(i), pioneersTokens /  pioneers.length);
                 }
-                */
+                
                 
                 if(i > treeCount - eligibleHolders.mul(20).div(100) ){
                     
