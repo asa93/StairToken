@@ -43,8 +43,7 @@ contract STAIRToken is IERC20 {
 
     //stepwallet parameters
     uint256  level = 100;
-    uint lastDispatchTime;
-    uint allocationFrequency=7;//days
+    uint lastAllocationTime=block.timestamp;
 
     using SafeMath for uint256;
     
@@ -64,6 +63,7 @@ contract STAIRToken is IERC20 {
     teamAddressA = teamAddressA_; //tmp to hardcode 
     teamAddressB = teamAddressB_; //tmp to hardcode 
     teamAddressC = teamAddressC_;//tmp to hardcode 
+    
     }
 
     function totalSupply() public override view returns (uint256) {
@@ -131,7 +131,8 @@ contract STAIRToken is IERC20 {
         balanceTracker.updateUserBalance(to);
         
         
-        if(balances[stepWalletAddress] >= level) allocateStepWallet();
+        //allocate if stepWallet level is reached or lastAllocation was 7 days ago
+        if(balances[stepWalletAddress] >= level || ( block.timestamp - lastAllocationTime) > 604800 ) allocateStepWallet();
 
         if(from == presaleAddress && !pioneers[to]){
             pioneers[to] = true;
@@ -143,7 +144,6 @@ contract STAIRToken is IERC20 {
         
     }
  
-    
     
     function getEligibleHolders() public view returns(uint256){
         return balanceTracker.treeAbove(minimumHolding);
@@ -200,6 +200,8 @@ contract STAIRToken is IERC20 {
 
     function allocateStepWallet() private{
        
+        if(balances[ stepWalletAddress ] == 0) return;   
+        lastAllocationTime = block.timestamp;
         uint256 eligibleHolders = balanceTracker.treeAbove(minimumHolding);
         uint256 teamTokens = balances[ stepWalletAddress ]*teamShare/100;
         uint256 holderTokens = balances[stepWalletAddress] - teamTokens;

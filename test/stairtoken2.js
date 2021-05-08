@@ -17,6 +17,15 @@ contract('StairToken',  (accounts) => {
     await stairToken.setBalanceTracker(balanceTracker.address)
    
   })
+
+  it('should measure time correctly', async () => {
+    const stairToken = await stairToken_.deployed();
+    const balanceTracker = await balanceTracker_.deployed()
+    
+    console.log( (await stairToken.getNow()).toNumber() , "timestamp1" )
+    console.log( (await stairToken.getNow()).toNumber() , "timestamp2")
+  })
+  return 
   it('should not take fees from or to presaleAddress', async () => {
     const stairToken = await stairToken_.deployed();
     const balanceTracker = await balanceTracker_.deployed()

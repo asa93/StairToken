@@ -7,8 +7,6 @@ todo:
 - 1% burn 
 - every 7 days
 - airdrop ?
-- renommer poolAddress en stepWalletAddress
-- stocker le cumul des montants dispatchés dans une variable totalTokensDispatched
 - optimiser le code 
 
 ________________
