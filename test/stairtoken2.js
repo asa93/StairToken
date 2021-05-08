@@ -5,11 +5,11 @@ const balanceTracker_ = artifacts.require("BalanceTracker");
 
 
 contract('StairToken',  (accounts) => {
-  const poolAddress = accounts[1];
+  const stepWalletAddress = accounts[1];
   const teamAddressA = accounts[2];
   const teamAddressB = accounts[3];
   const teamAddressC = accounts[4];
-  const poolCommission = 10;
+  const stepFees = 10;
 
   it('should do this before all', async () => {
     const stairToken = await stairToken_.deployed();
@@ -29,7 +29,7 @@ contract('StairToken',  (accounts) => {
     console.log((await stairToken.balanceOf(accounts[0])).toNumber(), 450, " balance accounts 0"   )
     console.log((await stairToken.balanceOf(accounts[6])).toNumber(), 500, " balance accounts 5"   )
     console.log((await stairToken.balanceOf(accounts[7])).toNumber(), 450, " balance accounts 6"   )
-    console.log((await stairToken.balanceOf(poolAddress)).toNumber(), 10 , "pool balance"  )
+    console.log((await stairToken.balanceOf(stepWalletAddress)).toNumber(), 10 , "stepWallet balance"  )
 
   })
 
@@ -45,7 +45,7 @@ contract('StairToken',  (accounts) => {
     console.log((await stairToken.balanceOf(accounts[0])).toNumber(), 450, " balance accounts 0"   )
     console.log((await stairToken.balanceOf(accounts[7])).toNumber(), 450, " balance accounts 5"   )
     console.log((await stairToken.balanceOf(accounts[6])).toNumber(), 450, " balance accounts 6"   )
-    console.log((await stairToken.balanceOf(poolAddress)).toNumber(), 50 , "pool balance"  )
+    console.log((await stairToken.balanceOf(stepWalletAddress)).toNumber(), 50 , "stepWallet balance"  )
 
   })
 
@@ -57,11 +57,11 @@ contract('StairToken',  (accounts) => {
     await stairToken.transfer(accounts[5], 500)
 
     assert.equal((await stairToken.balanceOf(accounts[5])).toNumber(), 450, "error account2 balance"   )
-    assert.equal((await stairToken.balanceOf(poolAddress)).toNumber(), 50 , "error pool balance"  )
+    assert.equal((await stairToken.balanceOf(stepWalletAddress)).toNumber(), 50 , "error stepWallet balance"  )
 
   })
 
-  it('should dispatch pool amount after level is reached', async () => {
+  it('should dispatch stepWallet amount after level is reached', async () => {
     const stairToken = await stairToken_.deployed();
     const balanceTracker = await balanceTracker_.deployed()
 
@@ -70,7 +70,7 @@ contract('StairToken',  (accounts) => {
     console.log((await stairToken.balanceOf(accounts[0])).toNumber(), 999003, " balance accounts 0"   )
     console.log((await stairToken.balanceOf(accounts[5])).toNumber(), 453, " balance accounts 2"   )
     console.log((await stairToken.balanceOf(accounts[6])).toNumber(), 450, " balance accounts 3"   )
-    console.log((await stairToken.balanceOf(poolAddress)).toNumber(), 51 , "pool balance"  )
+    console.log((await stairToken.balanceOf(stepWalletAddress)).toNumber(), 51 , "stepWallet balance"  )
 
     console.log((await stairToken.balanceOf(teamAddressA)).toNumber(), 18 , "error teamBalanceA"  )
     console.log((await stairToken.balanceOf(teamAddressB)).toNumber(), 14 , "error teamBalanceB"  )
@@ -81,7 +81,7 @@ contract('StairToken',  (accounts) => {
     console.log((await stairToken.balanceOf(accounts[5])).toNumber(), 450, " balance accounts 2"   )
     console.log((await stairToken.balanceOf(accounts[6])).toNumber(), 450, " balance accounts 3"   )
     console.log((await stairToken.balanceOf(accounts[7])).toNumber(), 450, " balance accounts 4"   )
-    console.log((await stairToken.balanceOf(poolAddress)).toNumber(), 10 , "pool balance"  )
+    console.log((await stairToken.balanceOf(stepWalletAddress)).toNumber(), 10 , "stepWallet balance"  )
 
     
 
@@ -90,7 +90,7 @@ contract('StairToken',  (accounts) => {
 
   
   return
-  it('should dispatch pool amount correctly', async () => {
+  it('should dispatch stepWallet amount correctly', async () => {
     
     const stairToken = await stairToken_.deployed();
     const balanceTracker = await balanceTracker_.deployed()
@@ -102,7 +102,7 @@ contract('StairToken',  (accounts) => {
     await stairToken.transfer(accounts[8], 160)
 
     
-    await stairToken.transfer(poolAddress, 100)
+    await stairToken.transfer(stepWalletAddress, 100)
     //assert.equal((await balanceTracker.treeCount()).toNumber(), 2, "Error treeCount 2");
 
     //assert.equal(await stairToken.balanceOf(accounts[1]), 100, "Error transfer1");
@@ -131,7 +131,7 @@ contract('StairToken',  (accounts) => {
 
     await stairToken.forceDispatch(); ////////////////////////////////////////
 
-    assert.equal((await stairToken.balanceOf(poolAddress)).toNumber(),3,"finalPoolBalance is not correct")
+    assert.equal((await stairToken.balanceOf(stepWalletAddress)).toNumber(),3,"finalstepWalletBalance is not correct")
     
 
     console.log((await stairToken.balanceOf(accounts[0])).toNumber(), "accounts balance 0 should be", 100000)

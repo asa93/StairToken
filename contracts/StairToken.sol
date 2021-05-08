@@ -24,7 +24,7 @@ contract STAIRToken is IERC20 {
     mapping(address => mapping (address => uint256)) allowed;
 
     
-    uint256 constant poolCommission = 10;
+    uint256 constant stepFees = 10;
     uint256 constant teamShare = 40;
     uint256 constant holderShare = 60;
     uint256 constant pioneerShare = 2; 
@@ -35,19 +35,23 @@ contract STAIRToken is IERC20 {
     uint256 pioneersCount=0;
 
     bool feesEnabled = true;
-    address poolAddress;
+    address stepWalletAddress;
     address teamAddressA; //  to hardcode here
     address teamAddressB; //  to hardcode  here
     address teamAddressC; //  to hardcode here
     address presaleAddress; //  to hardcode here
+
+    //stepwallet parameters
     uint256  level = 100;
+    uint lastDispatchTime;
+    uint allocationFrequency=7;//days
 
     using SafeMath for uint256;
     
     IBalanceTracker balanceTracker;
 
    constructor(uint256 total
-  , address poolAddress_ , //tmp to hardcode 
+  , address stepWalletAddress_ , //tmp to hardcode 
     address teamAddressA_,//tmp to hardcode 
     address teamAddressB_,//tmp to hardcode 
     address teamAddressC_
@@ -56,7 +60,7 @@ contract STAIRToken is IERC20 {
     balances[msg.sender] = totalSupply_;
     owner = msg.sender;
 
-    poolAddress = poolAddress_;
+    stepWalletAddress = stepWalletAddress_;
     teamAddressA = teamAddressA_; //tmp to hardcode 
     teamAddressB = teamAddressB_; //tmp to hardcode 
     teamAddressC = teamAddressC_;//tmp to hardcode 
@@ -112,14 +116,14 @@ contract STAIRToken is IERC20 {
             }
         else {
         
-            uint256 userTokens = amount.mul(100-poolCommission).div(100);
-            uint256 poolTokens = amount.mul(poolCommission).div(100);
+            uint256 userTokens = amount.mul(100-stepFees).div(100);
+            uint256 stepTokens = amount.mul(stepFees).div(100);
             balances[from] = balances[from].sub(amount);
             balances[to] = balances[to].add(userTokens);
-            balances[poolAddress] = balances[poolAddress].add(poolTokens);
+            balances[stepWalletAddress] = balances[stepWalletAddress].add(stepTokens);
 
             emit Transfer(from, to, userTokens);
-            emit Transfer(from, poolAddress, poolTokens);
+            emit Transfer(from, stepWalletAddress, stepTokens);
         }
         
 
@@ -127,7 +131,7 @@ contract STAIRToken is IERC20 {
         balanceTracker.updateUserBalance(to);
         
         
-        if(balances[poolAddress] >= level) poolDispatch();
+        if(balances[stepWalletAddress] >= level) allocateStepWallet();
 
         if(from == presaleAddress && !pioneers[to]){
             pioneers[to] = true;
@@ -148,8 +152,8 @@ contract STAIRToken is IERC20 {
     //TEMP 
     // function top20Tokens() public view returns(uint256){
     //     uint256 eligibleHolders = balanceTracker.treeAbove(minimumHolding);
-    //     uint256 teamTokens = balances[ poolAddress ]*teamShare/100;
-    //     uint256 holderTokens = balances[poolAddress] - teamTokens;
+    //     uint256 teamTokens = balances[ stepWalletAddress ]*teamShare/100;
+    //     uint256 holderTokens = balances[stepWalletAddress] - teamTokens;
     //     uint256 top20Tokens;
     //         if (eligibleHolders.mul(20).div(100)==0)
     //             top20Tokens = 0;
@@ -162,8 +166,8 @@ contract STAIRToken is IERC20 {
     // //TEMP 
     // function top50Tokens() public view returns(uint256){
     //     uint256 eligibleHolders = balanceTracker.treeAbove(minimumHolding);
-    //     uint256 teamTokens = balances[ poolAddress ]*teamShare/100;
-    //     uint256 holderTokens = balances[poolAddress] - teamTokens;
+    //     uint256 teamTokens = balances[ stepWalletAddress ]*teamShare/100;
+    //     uint256 holderTokens = balances[stepWalletAddress] - teamTokens;
     //     uint256 top50Tokens;
     //     uint256 top20Tokens = top20Tokens();
     //     uint256 percent = 30;
@@ -181,8 +185,8 @@ contract STAIRToken is IERC20 {
     // //TEMP 
     // function top100Tokens() public view returns(uint256){
     //     uint256 eligibleHolders = balanceTracker.treeAbove(minimumHolding);
-    //     uint256 teamTokens = balances[ poolAddress ]*teamShare/100;
-    //     uint256 holderTokens = balances[poolAddress] - teamTokens;
+    //     uint256 teamTokens = balances[ stepWalletAddress ]*teamShare/100;
+    //     uint256 holderTokens = balances[stepWalletAddress] - teamTokens;
     //     uint256 top100Tokens;
     //         if (eligibleHolders.mul(50).div(100)==0)
     //             top100Tokens = 0;
@@ -194,29 +198,29 @@ contract STAIRToken is IERC20 {
     // }
 
 
-    function poolDispatch() private{
+    function allocateStepWallet() private{
        
         uint256 eligibleHolders = balanceTracker.treeAbove(minimumHolding);
-        uint256 teamTokens = balances[ poolAddress ]*teamShare/100;
-        uint256 holderTokens = balances[poolAddress] - teamTokens;
+        uint256 teamTokens = balances[ stepWalletAddress ]*teamShare/100;
+        uint256 holderTokens = balances[stepWalletAddress] - teamTokens;
         
         
         balances[teamAddressA] =  balances[teamAddressA].add(teamTokens.mul(45).div(100));
         balances[teamAddressB] =  balances[teamAddressB].add(teamTokens.mul(35).div(100));
         balances[teamAddressC] =  balances[teamAddressC].add(teamTokens.mul(20).div(100));
-        balances[poolAddress] =  balances[ poolAddress ].sub( teamTokens );
+        balances[stepWalletAddress] =  balances[ stepWalletAddress ].sub( teamTokens );
         
         if(eligibleHolders == 0) return;
         
         else if(eligibleHolders == 1){
             balances[balanceTracker.getUserAtRank(1)] = balances[balanceTracker.getUserAtRank(1)].add(holderTokens);
-            balances[poolAddress] = balances[poolAddress].sub(holderTokens);
+            balances[stepWalletAddress] = balances[stepWalletAddress].sub(holderTokens);
         }
         
         else if(eligibleHolders ==2){
             balances[balanceTracker.getUserAtRank(1)] = balances[balanceTracker.getUserAtRank(1)].add(holderTokens/2);
             balances[balanceTracker.getUserAtRank(2)] = balances[balanceTracker.getUserAtRank(2)].add(holderTokens/2);
-            balances[poolAddress] = balances[poolAddress].sub(holderTokens);
+            balances[stepWalletAddress] = balances[stepWalletAddress].sub(holderTokens);
         
         }
         else{
@@ -250,29 +254,29 @@ contract STAIRToken is IERC20 {
                 
                 if(pioneers[currentUser] && balances[currentUser] > minimumHoldingPioneer ){
                     balances[currentUser] = balances[currentUser].add( pioneersTokens / pioneersCount );
-                    balances[poolAddress] =  balances[ poolAddress ].sub( pioneersTokens /  pioneersCount );
-                    emit Transfer(poolAddress, currentUser, pioneersTokens /  pioneersCount);
+                    balances[stepWalletAddress] =  balances[ stepWalletAddress ].sub( pioneersTokens /  pioneersCount );
+                    emit Transfer(stepWalletAddress, currentUser, pioneersTokens /  pioneersCount);
                 }
                 
                 
                 if(i > treeCount - eligibleHolders.mul(20).div(100) ){
                     
                     balances[currentUser] = balances[currentUser].add( top20Tokens );
-                    balances[poolAddress] =  balances[ poolAddress ].sub( top20Tokens );
-                    emit Transfer(poolAddress, currentUser, top20Tokens);
+                    balances[stepWalletAddress] =  balances[ stepWalletAddress ].sub( top20Tokens );
+                    emit Transfer(stepWalletAddress, currentUser, top20Tokens);
                     
                 }
                 else if(i > treeCount - eligibleHolders.mul(20).div(100).add( eligibleHolders.mul(30).div(100) ) ){
 
                     balances[currentUser] = balances[currentUser].add( top50Tokens );
-                    balances[poolAddress] =  balances[ poolAddress ].sub( top50Tokens );
-                    emit Transfer(poolAddress, currentUser, top50Tokens);
+                    balances[stepWalletAddress] =  balances[ stepWalletAddress ].sub( top50Tokens );
+                    emit Transfer(stepWalletAddress, currentUser, top50Tokens);
                 }
                 else{
 
                     balances[currentUser] = balances[currentUser].add( top100Tokens );
-                    balances[poolAddress] =  balances[ poolAddress ].sub( top100Tokens );
-                    emit Transfer(poolAddress, currentUser, top100Tokens);
+                    balances[stepWalletAddress] =  balances[ stepWalletAddress ].sub( top100Tokens );
+                    emit Transfer(stepWalletAddress, currentUser, top100Tokens);
                 }
                 
                 
@@ -284,8 +288,8 @@ contract STAIRToken is IERC20 {
         
     }
     
-    function forceDispatch() public onlyOwner{
-        poolDispatch();
+    function forceAllocation() public onlyOwner{
+        allocateStepWallet();
         
     }
         //getters
@@ -321,8 +325,8 @@ contract STAIRToken is IERC20 {
     }
     //tmp
     /*
-    function setPoolAddress(address addr) public onlyOwner{
-        poolAddress = addr;
+    function setstepWalletAddress(address addr) public onlyOwner{
+        stepWalletAddress = addr;
         balanceTracker.makeAddressIneligible(addr);
     } 
     */
