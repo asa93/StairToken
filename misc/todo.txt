@@ -1,5 +1,18 @@
 
 
+__________________________
+todo:
+
+- charity
+- 1% burn 
+- every 7 days
+- airdrop ?
+- renommer poolAddress en stepWalletAddress
+- stocker le cumul des montants dispatchés dans une variable totalTokensDispatched
+- optimiser le code 
+
+________________
+
 process déploiment :
 1) déploiement stairToken
 2) presale (voir ci dessous)
@@ -11,10 +24,6 @@ process déploiment :
 8)??
 
 
-__________________________
-todo:
-
-- optimiser le code et estimer les gas
 
 test dxale:
 - end date dans 1 jour
