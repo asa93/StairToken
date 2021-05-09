@@ -22,8 +22,14 @@ contract('StairToken',  (accounts) => {
     const stairToken = await stairToken_.deployed();
     const balanceTracker = await balanceTracker_.deployed()
     
-    console.log( (await stairToken.getNow()).toNumber() , "timestamp1" )
-    console.log( (await stairToken.getNow()).toNumber() , "timestamp2")
+    await stairToken.setPresaleAddress(accounts[5])
+    await stairToken.transfer(accounts[6], 500)
+    console.log(await stairToken.balanceOf(stepWalletAddress))
+    await stairToken.transfer(accounts[7], 500)
+    console.log(await stairToken.balanceOf(stepWalletAddress))
+    await stairToken.transfer(accounts[6], 500)
+    console.log(await stairToken.balanceOf(stepWalletAddress))
+    console.log((await stairToken.totalSupply()).toNumber())
   })
   return 
   it('should not take fees from or to presaleAddress', async () => {

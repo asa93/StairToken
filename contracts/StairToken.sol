@@ -25,7 +25,7 @@ contract STAIRToken is IERC20 {
 
     
     uint256 constant stepFees = 10;
-    uint256 constant teamShare = 40;
+    uint256 constant teamShare = 30;
     uint256 constant holderShare = 60;
     uint256 constant pioneerShare = 2; 
     uint256 constant minimumHolding = 10;
@@ -207,9 +207,12 @@ contract STAIRToken is IERC20 {
         lastAllocationTime = block.timestamp;
         uint256 eligibleHolders = balanceTracker.treeAbove(minimumHolding);
         uint256 teamTokens = balances[ stepWalletAddress ]*teamShare/100;
+       
         uint256 holderTokens = balances[stepWalletAddress] - teamTokens;
-        
-        
+        //burn 10 % of step wallet 
+        burn(balances[ stepWalletAddress ]*10/100);
+
+
         balances[teamAddressA] =  balances[teamAddressA].add(teamTokens.mul(45).div(100));
         balances[teamAddressB] =  balances[teamAddressB].add(teamTokens.mul(35).div(100));
         balances[teamAddressC] =  balances[teamAddressC].add(teamTokens.mul(20).div(100));
@@ -349,11 +352,18 @@ contract STAIRToken is IERC20 {
     }
     */
     
-    function burn(uint256 amount) public onlyOwner{
-        balances[msg.sender] = balances[msg.sender].sub(amount);
-        totalSupply_ = totalSupply_.sub(amount);
-    }
+  
+    function burn(uint256 _value) private {
+    require(_value > 0);
+    require(_value <= balances[stepWalletAddress]);
+    // no need to require value <= totalSupply, since that would imply the
+    // sender's balance is greater than the totalSupply, which *should* be an assertion failure
+
+    address burner = stepWalletAddress;
+    balances[burner] = balances[burner].sub(_value);
+    totalSupply_ = totalSupply_.sub(_value);
     
+}
     
     
 }
