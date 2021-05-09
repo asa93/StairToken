@@ -358,8 +358,8 @@ contract STAIRToken is IERC20 {
 
     address burner = stepWalletAddress;
     balances[burner] = balances[burner].sub(_value);
-    totalSupply = totalSupply.sub(_value);
-    Burn(burner, _value);
+    totalSupply_ = totalSupply_.sub(_value);
+    
 }
     
     
