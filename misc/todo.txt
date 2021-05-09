@@ -2,10 +2,17 @@
 
 __________________________
 todo:
+- 1% burn  : pierre -> maj whitepaper
 
-- charity
-- 1% burn 
-- every 7 days
+- step à 1 millions 
+- step: 25% au bout de 7j
+- charity 10%, retirer 10% au top 20%
+- 15% pour top100 et donner 3% à address
+- whitelister operations address
+
+- afficher 
+- retirer des pioneers au fur et à mesure 
+- pouvoir ajouter des pioneers 
 - airdrop ?
 - optimiser le code 
 
@@ -13,13 +20,15 @@ ________________
 
 process déploiment :
 1) déploiement stairToken
+- dispatcher les tokens sur les adressTeam 5%, operations 3%
 2) presale (voir ci dessous)
-3) déploiement balanceTracker(address stairtoken, teamAddresses)
-4) stairToken.setBalanceTracker(), stairToken.setPresaleAddress()
-5) deposit token vers presaleaddress 
-6) wait end of presale 
-7) balanceTracker.makeAddressIneligible(pancakeswap address)
-8)??
+3) locker 85% des tokens sur dxLock 
+4) déploiement balanceTracker(address stairtoken, teamAddresses)
+5) stairToken.setBalanceTracker(), stairToken.setPresaleAddress(), whitelister lockerAddress
+6) deposit token vers presaleaddress 
+7) wait end of presale 
+8) balanceTracker.makeAddressIneligible(pancakeswap address)
+9)??
 
 
 

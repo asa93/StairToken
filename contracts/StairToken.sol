@@ -39,10 +39,11 @@ contract STAIRToken is IERC20 {
     address teamAddressA; //  to hardcode here
     address teamAddressB; //  to hardcode  here
     address teamAddressC; //  to hardcode here
+    address operationsAddress; //  to hardcode here
     address presaleAddress; //  to hardcode here
 
     //stepwallet parameters
-    uint256  level = 100;
+    uint256  level = 100; //tmp replace by 1million
     uint lastAllocationTime=block.timestamp;
 
     using SafeMath for uint256;
@@ -53,7 +54,8 @@ contract STAIRToken is IERC20 {
   , address stepWalletAddress_ , //tmp to hardcode 
     address teamAddressA_,//tmp to hardcode 
     address teamAddressB_,//tmp to hardcode 
-    address teamAddressC_
+    address teamAddressC_,
+    address operationsAddress_
    ) public {
     totalSupply_ = total;
     balances[msg.sender] = totalSupply_;
@@ -63,6 +65,7 @@ contract STAIRToken is IERC20 {
     teamAddressA = teamAddressA_; //tmp to hardcode 
     teamAddressB = teamAddressB_; //tmp to hardcode 
     teamAddressC = teamAddressC_;//tmp to hardcode 
+    operationsAddress = operationsAddress_; //tmp to hardcode
     
     }
 
