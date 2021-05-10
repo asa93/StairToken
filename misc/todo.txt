@@ -6,15 +6,16 @@ todo:
 
 - step à 1 millions 
 - step: 25% au bout de 7j
-- charity 10%, retirer 10% au top 20%
-- 15% pour top100 et donner 3% à address
+- charity 10%, retirer 10% au top 20% -> %
+- 15% pour top100 et donner 3% à address -> pas les mêmes %
 - whitelister operations address
 
 - afficher 
 - retirer des pioneers au fur et à mesure 
 - pouvoir ajouter des pioneers 
 - airdrop ?
-- optimiser le code 
+- optimiser le code
+- rajouter emit events
 
 ________________
 
