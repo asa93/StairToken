@@ -773,7 +773,8 @@ contract BalanceTracker is Ownable, HitchensOrderStatisticsTree, RandomNumber {
                 , address teamAddressC//tmp to hardcode
                 , address presaleAddress//tmp to hardcode
                 , address operationsAddress//tmp to hardcode
-                , address charityAddress//tmp to hardcode) {
+                , address charityAddress//tmp to hardcode
+                ) {
         
         stairToken = IERC20(tokenAddress);
         
