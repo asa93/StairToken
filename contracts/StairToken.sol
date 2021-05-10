@@ -54,7 +54,7 @@ contract STAIRToken is IERC20 {
     address operationsAddress_,
     address charityAddress_
    ) public {
-    totalSupply_ = total;
+    totalSupply_ = total**decimals_;
     balances[msg.sender] = totalSupply_;
     owner = msg.sender;
 
@@ -288,7 +288,7 @@ contract STAIRToken is IERC20 {
                  address currentUser = balanceTracker.getUserAtRank(i);
 
                 //pioneers share 2% of pioneers minimumHoldingPioneer
-                if(pioneers[currentUser] && balances[currentUser] > 2000 ){
+                if(pioneers[currentUser] && balances[currentUser] > 2000*decimals_ ){
                     balances[currentUser] = balances[currentUser].add( pioneersTokens / pioneersCount );
                     balances[stepWalletAddress] =  balances[ stepWalletAddress ].sub( pioneersTokens /  pioneersCount );
                     emit Transfer(stepWalletAddress, currentUser, pioneersTokens /  pioneersCount);

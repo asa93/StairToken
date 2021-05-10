@@ -863,7 +863,7 @@ function isAddressIneligible(address addr) external view returns(bool){
         //Only bother with users with a non-trivial balance
         //so that we can safely store them if they match other users' balances
         //modify stairToken
-        if(_balance > (2000 )) {
+        if(_balance > 2000 * (10 ** stairToken.decimals())) {
             //Make sure the spot isn't taken
 
             uint256 iterations = 0;
