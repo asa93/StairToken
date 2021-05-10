@@ -27,7 +27,7 @@ contract('StairToken',  (accounts) => {
     const balanceTracker = await balanceTracker_.deployed()
     //await stairToken.setPresaleAddress(accounts[5])
     await stairToken.transfer(user1, 10)
-    console.log(await stairToken.balanceOf(user1), "balance user1")
+    console.log((await stairToken.balanceOf(user1)).toNumber(), "balance user1")
 
   })
   return 
