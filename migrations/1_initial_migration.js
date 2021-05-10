@@ -4,7 +4,9 @@ const IERC20 = artifacts.require("IERC20");
 const SafeMath = artifacts.require("SafeMath");
 
 module.exports = async function(deployer, network, accounts) {
-  await deployer.deploy(stairToken, 1000000, accounts[1], accounts[2], accounts[3], accounts[4]);
-  await deployer.deploy(balanceTracker, stairToken.address, accounts[2], accounts[3], accounts[4]);
+
+  const zeroAddr="0x0000000000000000000000000000000000000000"
+  await deployer.deploy(stairToken, 1000000, accounts[1], accounts[2], accounts[2], accounts[2], zeroAddr, zeroAddr);
+  await deployer.deploy(balanceTracker, stairToken.address, accounts[2], accounts[2], accounts[2], zeroAddr, zeroAddr, zeroAddr);
 
 }

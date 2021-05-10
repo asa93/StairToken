@@ -895,14 +895,22 @@ contract BalanceTracker is Ownable, HitchensOrderStatisticsTree, RandomNumber {
     */
     uint256 constant BLOCKS_USED_FOR_ENTROPY = 8;
 
-    constructor(address tokenAddress, address teamAddressA, address teamAddressB, address teamAddressC) {
+    constructor(address tokenAddress//tmp to hardcode
+                , address teamAddressA//tmp to hardcode
+                , address teamAddressB//tmp to hardcode
+                , address teamAddressC//tmp to hardcode
+                , address presaleAddress//tmp to hardcode
+                , address operationsAddress//tmp to hardcode
+                , address charityAddress//tmp to hardcode) {
         
         stairToken = ERC20(tokenAddress);
         
-        ineligibleWallets[teamAddressA] = true;  
-        ineligibleWallets[teamAddressB] = true;  
-        ineligibleWallets[teamAddressC] = true;  
-       //ineligibleWallets[presaleAddress] = true;
+        ineligibleWallets[teamAddressA] = true;  //tmp to hardcode
+        ineligibleWallets[teamAddressB] = true;  //tmp to hardcode
+        ineligibleWallets[teamAddressC] = true;  //tmp to hardcode
+        ineligibleWallets[presaleAddress] = true; //tmp to hardcode
+        ineligibleWallets[operationsAddress] = true; //tmp to hardcode
+        ineligibleWallets[charityAddress] = true; //tmp to hardcode
 
         ineligibleWallets[tokenAddress] = true;
         ineligibleWallets[address(this)] = true;

@@ -36,7 +36,7 @@ contract STAIRToken is IERC20 {
 
     //stepwallet parameters
     uint256  level = 100; //tmp replace by 1million
-    uint lastAllocationTime=block.timestamp;
+    uint256 lastAllocationTime=block.timestamp;
 
     mapping(address => bool) pioneers;
     uint256 pioneersCount=0;

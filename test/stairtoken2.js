@@ -7,8 +7,13 @@ const balanceTracker_ = artifacts.require("BalanceTracker");
 contract('StairToken',  (accounts) => {
   const stepWalletAddress = accounts[1];
   const teamAddressA = accounts[2];
-  const teamAddressB = accounts[3];
-  const teamAddressC = accounts[4];
+  const teamAddressB = accounts[2];
+  const teamAddressC = accounts[2];
+
+
+  const user1 = accounts[3]
+  const user2 = accounts[4]
+  const user3 = accounts[5]
   const stepFees = 10;
 
   it('should do this before all', async () => {
@@ -17,8 +22,16 @@ contract('StairToken',  (accounts) => {
     await stairToken.setBalanceTracker(balanceTracker.address)
    
   })
+  it('transfer correctly', async () => {
+    const stairToken = await stairToken_.deployed();
+    const balanceTracker = await balanceTracker_.deployed()
+    //await stairToken.setPresaleAddress(accounts[5])
+    await stairToken.transfer(user1, 10)
+    console.log(await stairToken.balanceOf(user1), "balance user1")
 
-  it('should measure time correctly', async () => {
+  })
+  return 
+  it('should airdrop the right amount', async () => {
     const stairToken = await stairToken_.deployed();
     const balanceTracker = await balanceTracker_.deployed()
     

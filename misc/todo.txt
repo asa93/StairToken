@@ -21,7 +21,7 @@ process déploiment :
 ) dispatcher les tokens sur les adressTeam & operations 
 ) presale (voir ci dessous)
 ) locker 85% des tokens sur dxLock 
-) déploiement balanceTracker(address stairtoken, teamAddresses)
+) déploiement balanceTracker(address stairtoken, teamAddresses, presaleAddress, charityAddress, operationsAddress)
 ) stairToken.setBalanceTracker(), stairToken.setPresaleAddress(), whitelister lockerAddress
 ) deposit token vers presaleaddress 
 ) wait end of presale 
