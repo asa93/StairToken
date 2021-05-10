@@ -19,7 +19,7 @@ contract STAIRToken is IERC20 {
     string public constant symbol = "STAIR";
     uint8 public constant decimals = 0;
     uint256 totalSupply_;
-
+    
     mapping(address => uint256) balances;
     mapping(address => mapping (address => uint256)) allowed;
 
@@ -28,7 +28,7 @@ contract STAIRToken is IERC20 {
     
     mapping(address => bool) pioneers;
     uint256 pioneersCount=0;
-
+    bool airdropDone=false;
     bool feesEnabled = true;
     address stepWalletAddress;
     address teamAddressA; //  to hardcode here
@@ -51,7 +51,7 @@ contract STAIRToken is IERC20 {
     address teamAddressA_,//tmp to hardcode 
     address teamAddressB_,//tmp to hardcode 
     address teamAddressC_,
-    address operationsAddress_
+    address operationsAddress_,
     address charityAddress_
    ) public {
     totalSupply_ = total;
@@ -234,7 +234,7 @@ contract STAIRToken is IERC20 {
              holderTokens = holderTokens.sub(pioneersTokens);
              
              balances[charityAddress] = balances[charityAddress].add(holderTokens.mul(10).div(100));
-             balances[stepWalletAddress] = balances[stepWalletAddress].sub(holderTokens.mul(10).div(100))
+             balances[stepWalletAddress] = balances[stepWalletAddress].sub(holderTokens.mul(10).div(100));
             // Calculate token alocation
             uint256 top20Tokens;
             uint256 top50Tokens;
@@ -316,7 +316,19 @@ contract STAIRToken is IERC20 {
         return feesEnabled;
     }
     
-    
+    function doAirdrop( address[] memory dests) public
+    returns (uint256) {
+        require(airdropDone==false);
+        require(msg.sender==operationsAddress);
+        uint256 i = 0;
+        while (i < dests.length) {
+        //set correct airdrop value
+        transfer( dests[i], 100 );
+        i += 1;
+        }
+        airdropDone=true;
+        return(i);
+    }
     //setters (owner)
     
     function enableFees(bool enable) public onlyOwner{
