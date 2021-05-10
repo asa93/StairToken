@@ -17,7 +17,7 @@ contract STAIRToken is IERC20 {
     
     string public constant name = "STAIR";
     string public constant symbol = "STAIR";
-    uint8 public constant decimals = 0;
+    uint8 public constant decimals_ = 0;
     uint256 totalSupply_;
     
     mapping(address => uint256) balances;
@@ -70,6 +70,10 @@ contract STAIRToken is IERC20 {
     function totalSupply() public override view returns (uint256) {
     return totalSupply_;
     }
+    function decimals() public override view returns (uint8) {
+        return decimals_;
+    }
+
 
     function balanceOf(address tokenOwner) public override view returns (uint256) {
         return balances[tokenOwner];
