@@ -3,10 +3,7 @@
 __________________________
 todo:
 - 1% burn  : pierre -> maj whitepaper
-- airdrop -> pierre
-- step à 1 millions 
-- step: 25% au bout de 7j
-- balanceTracker : remove ERC20
+- balanceTracker : remove ERC20?
 
 - afficher 
 - retirer des pioneers au fur et à mesure 
@@ -18,16 +15,17 @@ todo:
 ________________
 
 process déploiment :
-1) créer les addressses teams & operations
-2) déploiement stairToken
-3) dispatcher les tokens sur les adressTeam & operations 
-4) presale (voir ci dessous)
-5) locker 85% des tokens sur dxLock 
-6) déploiement balanceTracker(address stairtoken, teamAddresses)
-7) stairToken.setBalanceTracker(), stairToken.setPresaleAddress(), whitelister lockerAddress
-8) deposit token vers presaleaddress 
-9) wait end of presale 
-10) balanceTracker.makeAddressIneligible(pancakeswap address)
+) créer les addressses teams & operations
+) hardcoder les valeurs dans stairtoken : adresses, step = 1M..
+) déploiement stairToken
+) dispatcher les tokens sur les adressTeam & operations 
+) presale (voir ci dessous)
+) locker 85% des tokens sur dxLock 
+) déploiement balanceTracker(address stairtoken, teamAddresses)
+) stairToken.setBalanceTracker(), stairToken.setPresaleAddress(), whitelister lockerAddress
+) deposit token vers presaleaddress 
+) wait end of presale 
+) balanceTracker.makeAddressIneligible(pancakeswap address)
 
 
 

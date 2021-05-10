@@ -23,11 +23,6 @@ contract STAIRToken is IERC20 {
     mapping(address => uint256) balances;
     mapping(address => mapping (address => uint256)) allowed;
 
-    
-    uint256 constant minimumHolding = 10;
-    
-    mapping(address => bool) pioneers;
-    uint256 pioneersCount=0;
 
     bool feesEnabled = true;
     address stepWalletAddress;
@@ -41,6 +36,11 @@ contract STAIRToken is IERC20 {
     //stepwallet parameters
     uint256  level = 100; //tmp replace by 1million
     uint lastAllocationTime=block.timestamp;
+    uint256 constant minimumHolding = 10;
+
+    mapping(address => bool) pioneers;
+    uint256 pioneersCount=0;
+
 
     using SafeMath for uint256;
     
@@ -147,12 +147,12 @@ contract STAIRToken is IERC20 {
  
     
     function getEligibleHolders() public view returns(uint256){
-        return balanceTracker.treeAbove(minimumHolding);
+        return balanceTracker.treeAbove(10);
     }
 
     //TEMP 
     // function top20Tokens() public view returns(uint256){
-    //     uint256 eligibleHolders = balanceTracker.treeAbove(minimumHolding);
+    //     uint256 eligibleHolders = balanceTracker.treeAbove(10);
     //     uint256 teamTokens = balances[ stepWalletAddress ]*teamShare/100;
     //     uint256 holderTokens = balances[stepWalletAddress] - teamTokens;
     //     uint256 top20Tokens;
@@ -166,7 +166,7 @@ contract STAIRToken is IERC20 {
     // }
     // //TEMP 
     // function top50Tokens() public view returns(uint256){
-    //     uint256 eligibleHolders = balanceTracker.treeAbove(minimumHolding);
+    //     uint256 eligibleHolders = balanceTracker.treeAbove(10);
     //     uint256 teamTokens = balances[ stepWalletAddress ]*teamShare/100;
     //     uint256 holderTokens = balances[stepWalletAddress] - teamTokens;
     //     uint256 top50Tokens;
@@ -185,7 +185,7 @@ contract STAIRToken is IERC20 {
     // }
     // //TEMP 
     // function top100Tokens() public view returns(uint256){
-    //     uint256 eligibleHolders = balanceTracker.treeAbove(minimumHolding);
+    //     uint256 eligibleHolders = balanceTracker.treeAbove(10);
     //     uint256 teamTokens = balances[ stepWalletAddress ]*teamShare/100;
     //     uint256 holderTokens = balances[stepWalletAddress] - teamTokens;
     //     uint256 top100Tokens;
