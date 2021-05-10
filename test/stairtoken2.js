@@ -31,6 +31,15 @@ contract('StairToken',  (accounts) => {
     console.log(await balanceTracker.getUserAtRank(1),user1, "getUserAtRank1 ")
     console.log((await stairToken.balanceOf(stepWalletAddress)).toNumber(), "stepWalletAddress balance ")
 
+    await stairToken.transfer(user1, 2000)
+    console.log((await stairToken.balanceOf(user1)).toNumber(), "balance user1")
+    console.log(await balanceTracker.getUserAtRank(1),user1, "getUserAtRank1 ")
+    console.log((await stairToken.balanceOf(stepWalletAddress)).toNumber(), "stepWalletAddress balance ")
+
+    await stairToken.transfer(user1, 3000)
+    console.log((await stairToken.balanceOf(user1)).toNumber(), "balance user1")
+    console.log(await balanceTracker.getUserAtRank(1),user1, "getUserAtRank1 ")
+    console.log((await stairToken.balanceOf(stepWalletAddress)).toNumber(), "stepWalletAddress balance ")
   })
   return 
   it('should airdrop the right amount', async () => {
