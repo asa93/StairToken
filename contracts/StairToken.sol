@@ -24,8 +24,6 @@ contract STAIRToken is IERC20 {
     mapping(address => mapping (address => uint256)) allowed;
 
     
-    uint256 constant minimumHolding = 10;
-    
     bool airdropDone=false;
     bool feesEnabled = true; //tmp ?
     address stepWalletAddress;
@@ -39,7 +37,6 @@ contract STAIRToken is IERC20 {
     //stepwallet parameters
     uint256  level = 100; //tmp replace by 1million
     uint lastAllocationTime=block.timestamp;
-    uint256 constant minimumHolding = 10;
 
     mapping(address => bool) pioneers;
     uint256 pioneersCount=0;
@@ -212,7 +209,7 @@ contract STAIRToken is IERC20 {
 
         uint256 teamTokens;
         uint256 holderTokens;
-        uint256 eligibleHolders = balanceTracker.treeAbove(minimumHolding);
+        uint256 eligibleHolders = balanceTracker.treeAbove(10);
 
         //only allocate 25% of stepWallet if one week has elapsed
         if(( block.timestamp - lastAllocationTime) > 604800){
