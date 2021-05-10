@@ -17,7 +17,7 @@ contract STAIRToken is IERC20 {
     
     string public constant name = "STAIR";
     string public constant symbol = "STAIR";
-    uint8 public constant decimals_ = 0;
+    uint8 public constant decimals_ = 18;
     uint256 totalSupply_;
     
     mapping(address => uint256) balances;
