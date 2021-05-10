@@ -199,17 +199,27 @@ contract STAIRToken is IERC20 {
     // }
 
 
-    function allocateStepWallet() private{
-       
-        if(balances[ stepWalletAddress ] == 0) return;   
-        lastAllocationTime = block.timestamp;
-        uint256 eligibleHolders = balanceTracker.treeAbove(minimumHolding);
-        uint256 teamTokens = balances[ stepWalletAddress ]*30/100;
-       
-        uint256 holderTokens = balances[stepWalletAddress] - teamTokens;
-        //burn 10 % of step wallet 
-        burn(balances[ stepWalletAddress ]*10/100);
+    function allocateStepWallet() private{ 
 
+        if(balances[stepWalletAddress] == 0) return;
+        lastAllocationTime = block.timestamp;
+
+        //burn 10 % of step wallet 
+        burn(balances[stepWalletAddress]*10/100);
+
+        uint256 teamTokens;
+        uint256 holderTokens;
+        uint256 eligibleHolders = balanceTracker.treeAbove(minimumHolding);
+
+        //only allocate 25% of stepWallet if one week has elapsed
+        if(( block.timestamp - lastAllocationTime) > 604800){
+            teamTokens = balances[stepWalletAddress].mul(30).div(100).mul(25).div(100);
+            holderTokens = balances[stepWalletAddress].mul(25).div(100) - teamTokens;
+        }
+        else{
+        teamTokens = balances[stepWalletAddress].mul(30).div(100);
+        holderTokens = balances[stepWalletAddress] - teamTokens;
+        }
 
         balances[teamAddressA] =  balances[teamAddressA].add(teamTokens.mul(45).div(100));
         balances[teamAddressB] =  balances[teamAddressB].add(teamTokens.mul(35).div(100));
