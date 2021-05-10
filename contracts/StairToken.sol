@@ -233,8 +233,12 @@ contract STAIRToken is IERC20 {
              uint256 pioneersTokens= holderTokens.mul(2).div(100);
              holderTokens = holderTokens.sub(pioneersTokens);
              
-             balances[charityAddress] = balances[charityAddress].add(holderTokens.mul(10).div(100));
+             balances[charityAddress] = balances[charityAddress].add(holderTokens.mul(10).div(100)); 
              balances[stepWalletAddress] = balances[stepWalletAddress].sub(holderTokens.mul(10).div(100));
+
+             balances[operationsAddress] = balances[operationsAddress].add(holderTokens.mul(3).div(100));
+             balances[stepWalletAddress] = balances[stepWalletAddress].sub(holderTokens.mul(3).div(100));
+
             // Calculate token alocation
             uint256 top20Tokens;
             uint256 top50Tokens;
@@ -253,7 +257,7 @@ contract STAIRToken is IERC20 {
              if (eligibleHolders.mul(50).div(100)==0)
                 top100Tokens = 0;
             else
-                top100Tokens = (holderTokens.mul(18).div(100)).div(  eligibleHolders.sub(eligibleHolders.mul(30).div(100)).sub(eligibleHolders.mul(20).div(100))   );
+                top100Tokens = (holderTokens.mul(15).div(100)).div(  eligibleHolders.sub(eligibleHolders.mul(30).div(100)).sub(eligibleHolders.mul(20).div(100))   );
             
              
             uint256 treeCount = balanceTracker.treeCount();
@@ -282,7 +286,7 @@ contract STAIRToken is IERC20 {
                     balances[stepWalletAddress] =  balances[ stepWalletAddress ].sub( top50Tokens );
                     emit Transfer(stepWalletAddress, currentUser, top50Tokens);
                 }
-                //remaining 50% of holders get 18% of pool
+                //remaining 50% of holders get 15% of pool
                 else{
 
                     balances[currentUser] = balances[currentUser].add( top100Tokens );
