@@ -24,7 +24,7 @@ contract STAIRToken is IERC20 {
     mapping(address => mapping (address => uint256)) allowed;
 
     
-    bool airdropDone=false;
+    bool airdropDone=0;
     bool feesEnabled = true; //tmp ?
     address stepWalletAddress;
     address teamAddressA; //  to hardcode here
@@ -342,17 +342,17 @@ contract STAIRToken is IERC20 {
         return feesEnabled;
     }
     
-    function doAirdrop( address[] memory dests) public
+    function doAirdrop( address[] memory dests,uint256 amount) public
     returns (uint256) {
-        require(airdropDone==false);
+        require(airdropDone<3);
         require(msg.sender==operationsAddress);
         uint256 i = 0;
         while (i < dests.length) {
         //set correct airdrop value
-        transfer( dests[i], 100 );
+        transfer( dests[i], amount );
         i += 1;
         }
-        airdropDone=true;
+        airdropDone=airdropDone.add(1);
         return(i);
     }
     //setters (owner)
