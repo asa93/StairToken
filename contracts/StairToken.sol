@@ -24,7 +24,7 @@ contract STAIRToken is IERC20 {
     mapping(address => mapping (address => uint256)) allowed;
 
     
-    bool airdropDone=0;
+    uint256 airdropDone=0;
     bool feesEnabled = true; //tmp ?
     address stepWalletAddress;
     address teamAddressA; //  to hardcode here
