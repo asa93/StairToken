@@ -1,7 +1,11 @@
+test kovan
+0x948781BbD5B80E48d2eA27e02438c4e99f30A911 token 
+0xDBa14df105393e8648Abb69e4016449d766Bab45 balancet 
 
 
 __________________________
 todo:
+- tester fees uniswap
 - 1% burn  : pierre -> maj whitepaper
 - balanceTracker : remove ERC20?
 

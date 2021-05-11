@@ -1,11 +1,11 @@
  
 const stairToken_ = artifacts.require("StairToken");
 const balanceTracker_ = artifacts.require("BalanceTracker");
-
+const truffleAssert = require('truffle-assertions');
 
 
 contract('StairToken',  (accounts) => {
-  const stepWalletAddress = accounts[1];
+  const stepWalletAddress = accounts[0];
   const teamAddressA = accounts[2];
   const teamAddressB = accounts[2];
   const teamAddressC = accounts[2];
@@ -22,6 +22,16 @@ contract('StairToken',  (accounts) => {
     await stairToken.setBalanceTracker(balanceTracker.address)
    
   })
+  it('should emit event correctly', async () => {
+    const stairToken = await stairToken_.deployed();
+    const balanceTracker = await balanceTracker_.deployed()
+    //await stairToken.setPresaleAddress(accounts[5])
+    let tx = await stairToken.transfer(user1, 500)
+
+    truffleAssert.prettyPrintEmittedEvents(tx,10)
+    
+  })
+  return
   it('transfer & collect in pool', async () => {
     const stairToken = await stairToken_.deployed();
     const balanceTracker = await balanceTracker_.deployed()
@@ -40,6 +50,7 @@ contract('StairToken',  (accounts) => {
     console.log((await stairToken.balanceOf(user1)).toNumber(), "balance user1")
     console.log(await balanceTracker.getUserAtRank(1),user1, "getUserAtRank1 ")
     console.log((await stairToken.balanceOf(stepWalletAddress)).toNumber(), "stepWalletAddress balance ")
+    
   })
   return 
   it('should airdrop the right amount', async () => {
