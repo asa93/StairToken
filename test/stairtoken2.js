@@ -26,12 +26,12 @@ contract('StairToken',  (accounts) => {
     const stairToken = await stairToken_.deployed();
     const balanceTracker = await balanceTracker_.deployed()
     //await stairToken.setPresaleAddress(accounts[5])
-    await stairToken.transfer(user1, 10)
+    await stairToken.transfer(user1, 1000)
     console.log((await stairToken.balanceOf(user1)).toNumber(), "balance user1")
     console.log(await balanceTracker.getUserAtRank(1),user1, "getUserAtRank1 ")
     console.log((await stairToken.balanceOf(stepWalletAddress)).toNumber(), "stepWalletAddress balance ")
 
-    await stairToken.transfer(user1, 2000)
+    await stairToken.transfer(user1, 900)
     console.log((await stairToken.balanceOf(user1)).toNumber(), "balance user1")
     console.log(await balanceTracker.getUserAtRank(1),user1, "getUserAtRank1 ")
     console.log((await stairToken.balanceOf(stepWalletAddress)).toNumber(), "stepWalletAddress balance ")
