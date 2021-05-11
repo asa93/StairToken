@@ -6,7 +6,6 @@ test kovan
 __________________________
 todo:
 - tester fees uniswap
-- 1% burn  : pierre -> maj whitepaper
 - balanceTracker : remove ERC20?
 
 - afficher 
